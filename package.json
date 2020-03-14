@@ -1,11 +1,14 @@
 {
-  "name": "CoronavirusHelpRequest",
+  "name": "coronavirus_help_request",
   "version": "0.1.0",
   "main": "index.js",
   "repository": "git@github.com:rahulgi/CoronavirusHelpRequest.git",
   "author": "rahul.guptaiwasaki@gmail.com",
   "license": "None",
   "private": true,
+  "scripts": {
+    "deploy": "cd web_app && yarn build && cd ../ && yarn run firebase deploy"
+  },
   "dependencies": {
     "@types/jest": "^25.1.4",
     "@types/node": "^13.9.1",

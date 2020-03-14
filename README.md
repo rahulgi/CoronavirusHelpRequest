@@ -10,4 +10,6 @@
 
 ## Deploy
 
-`firebase deploy`
+Run: `yarn deploy`
+
+- This will build the React app and then deploy to Firebase.
