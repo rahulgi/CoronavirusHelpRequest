@@ -3,8 +3,8 @@ import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className="app">
+      <header className="app-header">
         <h1>Corvid19 Help Request</h1>
       </header>
     </div>
