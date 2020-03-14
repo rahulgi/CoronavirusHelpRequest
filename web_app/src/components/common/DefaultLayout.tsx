@@ -23,7 +23,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
       <div>
         <h1>Corvid19 Help Request</h1>
         <NavBar>
-          <Link to="/">Find requests</Link>
+          <Link to="/">Browse help requests</Link>
           <Link to="/login">Login</Link>
         </NavBar>
       </div>

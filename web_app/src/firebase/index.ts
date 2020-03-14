@@ -1,5 +1,4 @@
 import * as firebase from "firebase/app";
-import "firebase/firestore";
 
 let initialized = false;
 
@@ -20,9 +19,4 @@ export function initFirebase() {
     firebase.initializeApp(FIREBASE_CONFIG);
     initialized = true;
   }
-}
-
-export function getFirestore() {
-  initFirebase();
-  return firebase.firestore();
 }
