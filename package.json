@@ -1,0 +1,12 @@
+{
+  "name": "CoronavirusHelpRequest",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "git@github.com:rahulgi/CoronavirusHelpRequest.git",
+  "author": "rahul.guptaiwasaki@gmail.com",
+  "license": "None",
+  "private": true,
+  "dependencies": {
+    "firebase-tools": "^7.15.0"
+  }
+}
