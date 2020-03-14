@@ -7,6 +7,12 @@
   "license": "None",
   "private": true,
   "dependencies": {
-    "firebase-tools": "^7.15.0"
+    "@types/jest": "^25.1.4",
+    "@types/node": "^13.9.1",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "create-react-app": "^3.4.0",
+    "firebase-tools": "^7.15.0",
+    "typescript": "^3.8.3"
   }
 }

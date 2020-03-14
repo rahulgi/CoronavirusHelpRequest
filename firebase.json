@@ -10,7 +10,7 @@
     ]
   },
   "hosting": {
-    "public": "public",
+    "public": "web_app/build",
     "ignore": [
       "firebase.json",
       "**/.*",
