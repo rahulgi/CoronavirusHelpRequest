@@ -38,7 +38,7 @@ export function useHelpRequest(helpRequestId: string): HelpRequestResult {
     setHelpRequestResult({
       status: FetchResultStatus.ERROR,
       result: undefined,
-      error: "An error occurred while getting data for this help request."
+      error: "An error occurred while getting data for this Help Request."
     });
   }, []);
 
