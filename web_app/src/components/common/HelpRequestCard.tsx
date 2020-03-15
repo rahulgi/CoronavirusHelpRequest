@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "@emotion/styled/macro";
 import { Link, useHistory } from "react-router-dom";
 
-import { spacing } from "../helpers/styles";
 import {
   HelpRequest,
   HelpRequestStatus,
@@ -13,16 +12,11 @@ import {
   useAuthStatus,
   AuthStatus
 } from "../contexts/AuthContext";
+import { Card } from "./Card";
 
 const StyledLink = styled(Link)`
   color: inherit;
   text-decoration: inherit;
-`;
-
-const Card = styled.div`
-  border-radius: 16px;
-  background-color: #e8e8e8;
-  padding: ${spacing.s};
 `;
 
 const Actions = styled.div`
@@ -32,11 +26,13 @@ const Actions = styled.div`
 interface HelpRequestCardProps {
   request: HelpRequest;
   isLink?: boolean;
+  showActions?: boolean;
 }
 
 export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
   request,
-  isLink = false
+  isLink = false,
+  showActions = false
 }) => {
   const history = useHistory();
 
@@ -50,7 +46,7 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
 
   function onSendMessageClick(e: React.MouseEvent) {
     e.preventDefault();
-    const requestMessageUrl = `/request/${id}/message`;
+    const requestMessageUrl = `/request/${id}/messages`;
     isLoggedIn
       ? history.push(requestMessageUrl)
       : history.push(`/login?redirectTo=${requestMessageUrl}`);
@@ -72,28 +68,30 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
       <p>Created at: {createdAt.toLocaleString()}</p>
       <p>Status: {status}</p>
       <p>{body}</p>
-      <Actions>
-        {isOwnRequest ? (
-          (status === HelpRequestStatus.ACTIVE && (
-            <button
-              onClick={onSetStatusClickCreator(HelpRequestStatus.CLAIMED)}
-            >
-              Mark as In Progress
-            </button>
-          )) ||
-          (status === HelpRequestStatus.CLAIMED && (
-            <button
-              onClick={onSetStatusClickCreator(HelpRequestStatus.RESOLVED)}
-            >
-              Mark as Resolved
-            </button>
-          ))
-        ) : (
-          <>
-            <button onClick={onSendMessageClick}>Send a message</button>
-          </>
-        )}
-      </Actions>
+      {showActions && (
+        <Actions>
+          {isOwnRequest ? (
+            (status === HelpRequestStatus.ACTIVE && (
+              <button
+                onClick={onSetStatusClickCreator(HelpRequestStatus.CLAIMED)}
+              >
+                Mark as In Progress
+              </button>
+            )) ||
+            (status === HelpRequestStatus.CLAIMED && (
+              <button
+                onClick={onSetStatusClickCreator(HelpRequestStatus.RESOLVED)}
+              >
+                Mark as Resolved
+              </button>
+            ))
+          ) : (
+            <>
+              <button onClick={onSendMessageClick}>Send a message</button>
+            </>
+          )}
+        </Actions>
+      )}
     </Card>
   );
 

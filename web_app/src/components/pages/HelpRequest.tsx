@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { HelpRequestCard } from "../common/HelpRequestCard";
 import { DefaultLayout } from "../common/DefaultLayout";
-import { RouteChildrenProps, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import { useAsyncEffect } from "../../hooks/useAsyncEffect";
 import {
   getHelpRequest,

@@ -1,18 +1,9 @@
 import React, { useState, useCallback } from "react";
-import styled from "@emotion/styled/macro";
 
 import { HelpRequestCard } from "./common/HelpRequestCard";
 import { useAsyncEffect } from "../hooks/useAsyncEffect";
-import { spacing } from "./helpers/styles";
 import { HelpRequest, getHelpRequests } from "../firebase/storage/helpRequest";
-
-const List = styled.ul`
-  list-style-type: none;
-
-  & *:not(:last-child) {
-    margin-bottom: ${spacing.m};
-  }
-`;
+import { List } from "./common/List";
 
 export const HelpRequestsList: React.FC = () => {
   const [requests, setRequests] = useState<HelpRequest[]>();
@@ -33,7 +24,7 @@ export const HelpRequestsList: React.FC = () => {
         {requests &&
           requests.map(request => (
             <li key={request.id}>
-              <HelpRequestCard request={request} isLink />
+              <HelpRequestCard request={request} isLink showActions />
             </li>
           ))}
       </List>

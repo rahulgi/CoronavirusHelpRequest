@@ -6,7 +6,11 @@ import { getAuth } from "../firebase/auth";
 
 import "firebaseui/dist/firebaseui.css";
 import { Redirect } from "react-router-dom";
-import { updateAuthState } from "./contexts/AuthContext";
+import {
+  updateAuthState,
+  useAuthStatus,
+  AuthStatus
+} from "./contexts/AuthContext";
 
 // No redirect URL has been found. You must either specify a signInSuccessUrl in
 // the configuration, pass in a redirect URL to the widget URL, or return false
@@ -25,6 +29,7 @@ const ui = new firebaseui.auth.AuthUI(getAuth());
 const FIREBASE_UI_CONTAINER_ID = "firebase-container";
 
 export const Auth: React.FC<{ redirectTo?: string }> = ({ redirectTo }) => {
+  const authStatus = useAuthStatus();
   const [success, setSuccess] = useState(false);
   // TODO handle displaying error.
   const [error, setError] = useState<string>();
@@ -66,7 +71,7 @@ export const Auth: React.FC<{ redirectTo?: string }> = ({ redirectTo }) => {
     ui.start(`#${FIREBASE_UI_CONTAINER_ID}`, getUiConfig());
   }, []);
 
-  if (success) {
+  if (authStatus === AuthStatus.LOGGED_IN || success) {
     const redirect = redirectTo ? validateRedirect(redirectTo) : "/";
     return <Redirect to={redirect} push />;
   }

@@ -33,6 +33,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
         <NavBar>
           <Link to="/">Browse help requests</Link>
           <Link to="/requestHelp">Request help</Link>
+          {isLoggedIn && <Link to="/messages">Messages</Link>}
         </NavBar>
       </div>
       <div>

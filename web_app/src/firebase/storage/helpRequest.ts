@@ -43,7 +43,7 @@ export interface HelpRequest {
 /**
  * Maps Firestore HelpRequest query snapshot to the local HelpRequest type.
  */
-export function mapQueryDocToHelpRequest(
+function mapQueryDocToHelpRequest(
   doc: firebase.firestore.DocumentSnapshot
 ): HelpRequest {
   const id = doc.id;
