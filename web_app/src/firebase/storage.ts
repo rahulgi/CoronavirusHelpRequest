@@ -41,7 +41,6 @@ export function mapQueryDocToHelpRequest(
     body,
     status
   } = doc.data() as HelpRequestDocument;
-  console.log(doc.data());
   return {
     id,
     createdAt: created_at ? created_at.toDate() : new Date(),

@@ -3,8 +3,9 @@ import styled from "@emotion/styled/macro";
 
 import { DefaultLayout } from "../common/DefaultLayout";
 import { createHelpRequest } from "../../firebase/storage";
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 import { spacing } from "../helpers/styles";
+import { useLoggedInStatus, AuthStatus } from "../contexts/AuthContext";
 
 const Form = styled.form`
   display: flex;
@@ -24,6 +25,7 @@ const Form = styled.form`
 
 export const MakeRequestPage: React.FC = () => {
   const history = useHistory();
+  const loggedInStatus = useLoggedInStatus();
 
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState<string | undefined>();
@@ -38,6 +40,10 @@ export const MakeRequestPage: React.FC = () => {
     // TODO validate, show errors
     const newRequestId = await createHelpRequest({ title, body });
     history.push(`/request/${newRequestId}`);
+  }
+
+  if (loggedInStatus === AuthStatus.LOGGED_OUT) {
+    return <Redirect to="/login?redirectTo=/requestHelp" />;
   }
 
   return (

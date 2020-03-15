@@ -2,10 +2,10 @@ import React from "react";
 
 import { DefaultLayout } from "../common/DefaultLayout";
 import { HelpRequestsList } from "../HelpRequestsList";
-import { useLoggedIn } from "../contexts/AuthContext";
+import { useLoggedInStatus } from "../contexts/AuthContext";
 
 export const BrowsePage: React.FC = () => {
-  const loggedInStatus = useLoggedIn();
+  const loggedInStatus = useLoggedInStatus();
 
   return (
     <DefaultLayout pageTitle="Browse help requests">
