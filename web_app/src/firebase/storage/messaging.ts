@@ -109,8 +109,8 @@ export async function getThreads({
   return (
     await getFirestore()
       .collection(Collections.Threads)
+      .orderBy("last_message_at", "desc")
       .where("participant_ids", "array-contains", forUserId)
-      .orderBy("created_at", "desc")
       .get()
   ).docs.map(mapQueryDocToThread);
 }

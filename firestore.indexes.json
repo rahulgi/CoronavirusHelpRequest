@@ -4,12 +4,25 @@
       "collectionId": "threads",
       "fields": [
         {
-          "fieldPath": "last_updated_at",
-          "mode": "DESCENDING"
-        },
-        {
           "fieldPath": "participant_ids",
           "mode": "ARRAY_CONTAINS"
+        },
+        {
+          "fieldPath": "last_message_at",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "messages",
+      "fields": [
+        {
+          "fieldPath": "thread_id",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "created_at",
+          "mode": "DESCENDING"
         }
       ]
     }
