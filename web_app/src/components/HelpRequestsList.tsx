@@ -1,21 +1,10 @@
 import React, { useState, useCallback } from "react";
 import styled from "@emotion/styled/macro";
 
-import {
-  getFirestore,
-  Collections,
-  mapQueryDocToHelpRequest
-} from "../firebase/storage";
-import { HelpRequest, HelpRequestCard } from "./common/HelpRequestCard";
+import { HelpRequestCard } from "./common/HelpRequestCard";
 import { useAsyncEffect } from "../hooks/useAsyncEffect";
 import { spacing } from "./helpers/styles";
-
-async function getHelpRequests(): Promise<HelpRequest[]> {
-  const querySnapshot = await getFirestore()
-    .collection(Collections.HelpRequests)
-    .get();
-  return querySnapshot.docs.map(mapQueryDocToHelpRequest);
-}
+import { HelpRequest, getHelpRequests } from "../firebase/storage/helpRequest";
 
 const List = styled.ul`
   list-style-type: none;

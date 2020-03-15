@@ -1,9 +1,12 @@
 import React, { useState, useCallback } from "react";
-import { HelpRequest, HelpRequestCard } from "../common/HelpRequestCard";
+import { HelpRequestCard } from "../common/HelpRequestCard";
 import { DefaultLayout } from "../common/DefaultLayout";
 import { RouteChildrenProps, RouteComponentProps } from "react-router-dom";
 import { useAsyncEffect } from "../../hooks/useAsyncEffect";
-import { getHelpRequest } from "../../firebase/storage";
+import {
+  getHelpRequest,
+  HelpRequest
+} from "../../firebase/storage/helpRequest";
 
 export const HelpRequestPage: React.FC<RouteComponentProps<{ id: string }>> = ({
   match

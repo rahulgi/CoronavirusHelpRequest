@@ -1,12 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 
-import { initFirebase } from ".";
-import { HelpRequest } from "../components/common/HelpRequestCard";
-
-export enum Collections {
-  HelpRequests = "help_requests"
-}
+import { getFirestore, Collections } from ".";
 
 export enum HelpRequestStatus {
   ACTIVE = "ACTIVE",
@@ -25,6 +20,20 @@ interface HelpRequestDocument {
   body: string;
   status: HelpRequestStatus;
   location: firebase.firestore.GeoPoint;
+}
+
+/**
+ * The shape of a HelpRequest that the client app uses.
+ *
+ * (Just a bit easier for us to use than raw Firestore docs.)
+ */
+export interface HelpRequest {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  title: string;
+  body: string;
+  status: HelpRequestStatus;
 }
 
 /**
@@ -87,7 +96,9 @@ export async function getHelpRequest({
     : undefined;
 }
 
-export function getFirestore() {
-  initFirebase();
-  return firebase.firestore();
+export async function getHelpRequests(): Promise<HelpRequest[]> {
+  const querySnapshot = await getFirestore()
+    .collection(Collections.HelpRequests)
+    .get();
+  return querySnapshot.docs.map(mapQueryDocToHelpRequest);
 }

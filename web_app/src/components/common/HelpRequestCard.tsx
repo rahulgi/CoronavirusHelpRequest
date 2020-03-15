@@ -2,8 +2,8 @@ import React from "react";
 import styled from "@emotion/styled/macro";
 import { Link } from "react-router-dom";
 
-import { HelpRequestStatus } from "../../firebase/storage";
 import { spacing } from "../helpers/styles";
+import { HelpRequest } from "../../firebase/storage/helpRequest";
 
 const StyledLink = styled(Link)`
   color: inherit;
@@ -15,15 +15,6 @@ const Card = styled.div`
   background-color: #e8e8e8;
   padding: ${spacing.s};
 `;
-
-export interface HelpRequest {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  title: string;
-  body: string;
-  status: HelpRequestStatus;
-}
 
 interface HelpRequestCardProps {
   request: HelpRequest;

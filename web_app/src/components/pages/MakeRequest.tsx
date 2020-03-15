@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import styled from "@emotion/styled/macro";
 
 import { DefaultLayout } from "../common/DefaultLayout";
-import { createHelpRequest } from "../../firebase/storage";
 import { useHistory, Redirect } from "react-router-dom";
 import { spacing } from "../helpers/styles";
 import { useLoggedInStatus, AuthStatus } from "../contexts/AuthContext";
+import { createHelpRequest } from "../../firebase/storage/helpRequest";
 
 const Form = styled.form`
   display: flex;
