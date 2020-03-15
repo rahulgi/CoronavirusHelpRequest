@@ -17,6 +17,7 @@ import { HelpRequestCard } from "../common/HelpRequestCard";
 import { FetchResultStatus } from "../../hooks/data";
 import { Error } from "../common/Error";
 import { Loading } from "../common/Loading";
+import { NotFound } from "../common/NotFound";
 
 const FINDING_THREAD = Symbol("FINDING_THREAD");
 const THREAD_NOT_FOUND = Symbol("THREAD_NOT_FOUND");
@@ -98,7 +99,7 @@ export const MessageThreadPage: React.FC<RouteComponentProps<{
     <DefaultLayout pageTitle="Message thread with TODO">
       <div>
         {helpRequestResult.status === FetchResultStatus.NOT_FOUND && (
-          <h4>Help request not found</h4>
+          <NotFound elementName="Help Request" />
         )}
         {helpRequestResult.status === FetchResultStatus.FOUND && (
           <HelpRequestCard request={helpRequestResult.result} />

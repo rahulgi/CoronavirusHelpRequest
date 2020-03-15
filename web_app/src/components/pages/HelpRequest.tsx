@@ -1,4 +1,5 @@
 import React from "react";
+
 import { HelpRequestCard } from "../common/HelpRequestCard";
 import { DefaultLayout } from "../common/DefaultLayout";
 import { RouteComponentProps } from "react-router-dom";
@@ -6,6 +7,7 @@ import { useHelpRequest } from "../../hooks/data/useHelpRequest";
 import { FetchResultStatus } from "../../hooks/data";
 import { Loading } from "../common/Loading";
 import { Error } from "../common/Error";
+import { NotFound } from "../common/NotFound";
 
 export const HelpRequestPage: React.FC<RouteComponentProps<{ id: string }>> = ({
   match
@@ -17,7 +19,7 @@ export const HelpRequestPage: React.FC<RouteComponentProps<{ id: string }>> = ({
   return (
     <DefaultLayout pageTitle={`Help Request`}>
       {requestResult.status === FetchResultStatus.NOT_FOUND && (
-        <h4>Help request not found</h4>
+        <NotFound elementName="Help Request" />
       )}
       {requestResult.status === FetchResultStatus.FOUND && (
         <HelpRequestCard request={requestResult.result} />
