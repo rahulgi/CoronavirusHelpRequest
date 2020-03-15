@@ -1,36 +1,31 @@
-import React, { useState, useCallback } from "react";
+import React from "react";
 import { HelpRequestCard } from "../common/HelpRequestCard";
 import { DefaultLayout } from "../common/DefaultLayout";
 import { RouteComponentProps } from "react-router-dom";
-import { useAsyncEffect } from "../../hooks/useAsyncEffect";
-import {
-  getHelpRequest,
-  HelpRequest
-} from "../../firebase/storage/helpRequest";
+import { useHelpRequest } from "../../hooks/data/useHelpRequest";
+import { FetchResultStatus } from "../../hooks/data";
+import { Loading } from "../common/Loading";
+import { Error } from "../common/Error";
 
 export const HelpRequestPage: React.FC<RouteComponentProps<{ id: string }>> = ({
   match
 }) => {
-  const [helpRequest, setHelpRequest] = useState<HelpRequest | undefined>();
-
   const id = match.params.id;
 
-  const fetchHelpRequest = useCallback(() => getHelpRequest({ id }), [id]);
-  const handleHelpRequest = useCallback(setHelpRequest, []);
-  const handleHelpRequestError = useCallback(
-    (e: Error) => console.error(e),
-    []
-  );
-
-  useAsyncEffect({
-    asyncOperation: fetchHelpRequest,
-    handleResponse: handleHelpRequest,
-    handleError: handleHelpRequestError
-  });
+  const requestResult = useHelpRequest(id);
 
   return (
-    <DefaultLayout pageTitle={`Request: ${helpRequest && helpRequest.title}`}>
-      {helpRequest && <HelpRequestCard request={helpRequest} />}
+    <DefaultLayout pageTitle={`Help Request`}>
+      {requestResult.status === FetchResultStatus.NOT_FOUND && (
+        <h4>Help request not found</h4>
+      )}
+      {requestResult.status === FetchResultStatus.FOUND && (
+        <HelpRequestCard request={requestResult.result} />
+      )}
+      {requestResult.status === FetchResultStatus.LOADING && <Loading />}
+      {requestResult.status === FetchResultStatus.ERROR && (
+        <Error>{requestResult.error}</Error>
+      )}
     </DefaultLayout>
   );
 };

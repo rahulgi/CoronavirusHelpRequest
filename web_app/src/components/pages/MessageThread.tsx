@@ -12,12 +12,11 @@ import { useAsyncEffect } from "../../hooks/useAsyncEffect";
 import { List } from "../common/List";
 import { MessageCard } from "../MessageCard";
 import { MessageInput } from "../MessageInput";
-import {
-  useHelpRequest,
-  FINDING_HELP_REQUEST,
-  HELP_REQUEST_NOT_FOUND
-} from "../../hooks/useHelpRequest";
+import { useHelpRequest } from "../../hooks/data/useHelpRequest";
 import { HelpRequestCard } from "../common/HelpRequestCard";
+import { FetchResultStatus } from "../../hooks/data";
+import { Error } from "../common/Error";
+import { Loading } from "../common/Loading";
 
 const FINDING_THREAD = Symbol("FINDING_THREAD");
 const THREAD_NOT_FOUND = Symbol("THREAD_NOT_FOUND");
@@ -39,7 +38,7 @@ export const MessageThreadPage: React.FC<RouteComponentProps<{
 
   const helpRequestId = match.params.id;
 
-  const { helpRequest, helpRequestError } = useHelpRequest(helpRequestId);
+  const helpRequestResult = useHelpRequest(helpRequestId);
 
   const findThreadForHelpRequest = useCallback(async (): Promise<
     ThreadForHelpRequest
@@ -97,10 +96,18 @@ export const MessageThreadPage: React.FC<RouteComponentProps<{
 
   return (
     <DefaultLayout pageTitle="Message thread with TODO">
-      {helpRequest !== FINDING_HELP_REQUEST &&
-        helpRequest !== HELP_REQUEST_NOT_FOUND && (
-          <HelpRequestCard request={helpRequest} />
+      <div>
+        {helpRequestResult.status === FetchResultStatus.NOT_FOUND && (
+          <h4>Help request not found</h4>
         )}
+        {helpRequestResult.status === FetchResultStatus.FOUND && (
+          <HelpRequestCard request={helpRequestResult.result} />
+        )}
+        {helpRequestResult.status === FetchResultStatus.LOADING && <Loading />}
+        {helpRequestResult.status === FetchResultStatus.ERROR && (
+          <Error>{helpRequestResult.error}</Error>
+        )}
+      </div>
       <List>
         {messages &&
           messages.map(message => (
@@ -110,12 +117,7 @@ export const MessageThreadPage: React.FC<RouteComponentProps<{
           ))}
       </List>
       <MessageInput
-        helpRequest={
-          helpRequest !== FINDING_HELP_REQUEST &&
-          helpRequest !== HELP_REQUEST_NOT_FOUND
-            ? helpRequest
-            : undefined
-        }
+        helpRequest={helpRequestResult.result}
         threadId={
           threadForHelpRequest !== FINDING_THREAD &&
           threadForHelpRequest !== THREAD_NOT_FOUND
