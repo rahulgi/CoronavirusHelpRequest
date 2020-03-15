@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 
 import {
   getFirestore,
@@ -20,10 +20,14 @@ async function getHelpRequests(): Promise<HelpRequest[]> {
 export const HelpRequestsList: React.FC = () => {
   const [requests, setRequests] = useState<HelpRequest[]>();
 
+  const getRequests = useCallback(getHelpRequests, []);
+  const handleRequestsResponse = useCallback(setRequests, []);
+  const handleRequestsError = useCallback((e: Error) => console.error(e), []);
+
   useAsyncEffect({
-    asyncOperation: getHelpRequests,
-    handleResponse: setRequests,
-    handleError: e => console.error(e)
+    asyncOperation: getRequests,
+    handleResponse: handleRequestsResponse,
+    handleError: handleRequestsError
   });
 
   return (

@@ -28,6 +28,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
         <h1>Covid19 Help Request</h1>
         <NavBar>
           <Link to="/">Browse help requests</Link>
+          <Link to="/requestHelp">Request help</Link>
           {isLoggedIn ? (
             <Link to="/logout">Logout</Link>
           ) : (
