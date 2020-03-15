@@ -110,6 +110,7 @@ export async function getThreads({
     await getFirestore()
       .collection(Collections.Threads)
       .where("participant_ids", "array-contains", forUserId)
+      .orderBy("created_at", "desc")
       .get()
   ).docs.map(mapQueryDocToThread);
 }
@@ -156,6 +157,7 @@ export function listenForMessages({
   return getFirestore()
     .collection(Collections.Messages)
     .where("thread_id", "==", threadId)
+    .orderBy("created_at", "desc")
     .onSnapshot(
       snapshot => setMessages(snapshot.docs.map(mapQueryDocToMessage)),
       error => setMessagesError(error)

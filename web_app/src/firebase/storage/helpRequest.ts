@@ -162,6 +162,7 @@ export async function getHelpRequest({
 export async function getHelpRequests(): Promise<HelpRequest[]> {
   const querySnapshot = await getFirestore()
     .collection(Collections.HelpRequests)
+    .orderBy("created_at", "desc")
     .get();
   return querySnapshot.docs.map(mapQueryDocToHelpRequest);
 }

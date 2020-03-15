@@ -1,4 +1,18 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionId": "threads",
+      "fields": [
+        {
+          "fieldPath": "last_updated_at",
+          "mode": "DESCENDING"
+        },
+        {
+          "fieldPath": "participant_ids",
+          "mode": "ARRAY_CONTAINS"
+        }
+      ]
+    }
+  ],
   "fieldOverrides": []
 }
