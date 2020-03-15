@@ -7,7 +7,7 @@ import {
 import { useAsyncEffect } from "../useAsyncEffect";
 import { FetchResultStatus, FetchResult } from ".";
 
-type HelpRequestResult = FetchResult<HelpRequest>;
+export type HelpRequestResult = FetchResult<HelpRequest>;
 
 export function useHelpRequest(helpRequestId: string): HelpRequestResult {
   const [helpRequestResult, setHelpRequestResult] = useState<HelpRequestResult>(

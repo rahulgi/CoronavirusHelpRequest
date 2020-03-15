@@ -2,9 +2,18 @@ import React, { useState } from "react";
 import styled from "@emotion/styled/macro";
 
 import { spacing } from "./helpers/styles";
-import { createMessage, createThread } from "../firebase/storage/messaging";
+import {
+  createMessage,
+  createThread,
+  Message
+} from "../firebase/storage/messaging";
 import { HelpRequest } from "../firebase/storage/helpRequest";
 import { useCurrentUserId } from "./contexts/AuthContext";
+import { ThreadResult } from "../hooks/data/useThread";
+import { HelpRequestResult } from "../hooks/data/useHelpRequest";
+import { FetchResultStatus } from "../hooks/data";
+import { CreateResultStatus, CreateResult } from "../firebase/storage";
+import { Error } from "./common/Error";
 
 const Form = styled.form`
   display: flex;
@@ -23,40 +32,64 @@ const Form = styled.form`
 `;
 
 interface MessageInputProps {
-  helpRequest?: HelpRequest;
-  disabled?: boolean;
-  threadId?: string;
-  setThread: (threadId: string) => void;
+  helpRequestResult: HelpRequestResult;
+  threadResult: ThreadResult;
+  triggerThreadRefresh?: () => void;
 }
 
 export const MessageInput: React.FC<MessageInputProps> = ({
-  threadId,
-  helpRequest,
-  disabled,
-  setThread
+  threadResult,
+  helpRequestResult,
+  triggerThreadRefresh
 }) => {
-  const currentUserId = useCurrentUserId();
   const [messageText, setMessageText] = useState("");
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string>();
 
   async function sendMessage(e: React.FormEvent) {
     e.preventDefault();
-    if (!helpRequest || !currentUserId) {
+
+    let threadId = threadResult.result?.id;
+    let createResult: CreateResult<Message> | undefined = undefined;
+
+    if (!threadId && helpRequestResult.status !== FetchResultStatus.FOUND) {
       return;
     }
     setSending(true);
-    let threadToPostTo = threadId;
-    if (!threadToPostTo) {
-      threadToPostTo = await createThread({
+
+    if (!threadId) {
+      const helpRequest = helpRequestResult.result as HelpRequest;
+      const createThreadResult = await createThread({
         helpRequestId: helpRequest.id,
-        participantIds: [helpRequest.creatorId, currentUserId]
+        participantIds: [helpRequest.creatorId]
       });
-      setThread(threadToPostTo);
+      if (createThreadResult.status === CreateResultStatus.CREATED) {
+        threadId = createThreadResult.result.id;
+        triggerThreadRefresh && triggerThreadRefresh();
+      } else {
+        setError("An error occurred sending the message.");
+      }
     }
-    await createMessage({ threadId: threadToPostTo, message: messageText });
+
+    if (threadId) {
+      setSending(false);
+      createResult = await createMessage({
+        threadId,
+        message: messageText
+      });
+    }
+
     setSending(false);
-    setMessageText("");
+
+    if (createResult?.status === CreateResultStatus.CREATED) {
+      setMessageText("");
+    }
   }
+
+  const disabled =
+    sending ||
+    (threadResult.status !== FetchResultStatus.FOUND &&
+      helpRequestResult.status !== FetchResultStatus.FOUND);
 
   return (
     <Form onSubmit={sendMessage}>
@@ -65,12 +98,8 @@ export const MessageInput: React.FC<MessageInputProps> = ({
         value={messageText}
         onChange={e => setMessageText(e.target.value)}
       />
-      <input
-        type="submit"
-        value="Send"
-        disabled={disabled || sending}
-        autoFocus
-      />
+      <input type="submit" value="Send" disabled={disabled} autoFocus />
+      {error && <Error>{error}</Error>}
     </Form>
   );
 };

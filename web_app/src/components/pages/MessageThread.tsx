@@ -14,82 +14,26 @@ import { MessageCard } from "../MessageCard";
 import { MessageInput } from "../MessageInput";
 import { useHelpRequest } from "../../hooks/data/useHelpRequest";
 import { HelpRequestCard } from "../common/HelpRequestCard";
-import { FetchResultStatus } from "../../hooks/data";
+import { FetchResultStatus, FetchResult } from "../../hooks/data";
 import { Error } from "../common/Error";
 import { Loading } from "../common/Loading";
 import { NotFound } from "../common/NotFound";
-
-const FINDING_THREAD = Symbol("FINDING_THREAD");
-const THREAD_NOT_FOUND = Symbol("THREAD_NOT_FOUND");
-type ThreadForHelpRequest =
-  | typeof FINDING_THREAD
-  | typeof THREAD_NOT_FOUND
-  | string;
+import { useThread } from "../../hooks/data/useThread";
+import { useMessages } from "../../hooks/data/useMessages";
 
 export const MessageThreadPage: React.FC<RouteComponentProps<{
   id: string;
 }>> = ({ match }) => {
-  const currentUserId = useCurrentUserId();
-
-  const [threadForHelpRequest, setThreadForHelpRequest] = useState<
-    ThreadForHelpRequest
-  >(FINDING_THREAD);
-  const [messages, setMessages] = useState<Message[]>();
-  const [messagesError, setMessagesError] = useState<string>();
-
   const helpRequestId = match.params.id;
 
+  const [didCreateThread, setDidCreateThread] = useState(false);
+
   const helpRequestResult = useHelpRequest(helpRequestId);
+  const threadResult = useThread({ helpRequestId, didCreateThread });
+  console.log("threadResult", threadResult);
+  const messagesResult = useMessages(threadResult);
 
-  const findThreadForHelpRequest = useCallback(async (): Promise<
-    ThreadForHelpRequest
-  > => {
-    if (!currentUserId) {
-      return FINDING_THREAD;
-    }
-    const thread = await getThread({
-      forUserId: currentUserId,
-      forHelpRequestId: helpRequestId
-    });
-    return thread ? thread.id : THREAD_NOT_FOUND;
-  }, [currentUserId, helpRequestId]);
-  const handleThreadForHelpRequest = useCallback(setThreadForHelpRequest, []);
-  const handleThreadForHelpRequestError = useCallback((e: Error) => {
-    console.error(e);
-    setMessagesError(
-      "An error occurred fetching messages. Please refresh the page."
-    );
-  }, []);
-
-  useAsyncEffect({
-    asyncOperation: findThreadForHelpRequest,
-    handleResponse: handleThreadForHelpRequest,
-    handleError: handleThreadForHelpRequestError
-  });
-
-  useEffect(() => {
-    let unsubscribeFromMessages: () => void;
-    if (
-      threadForHelpRequest !== FINDING_THREAD &&
-      threadForHelpRequest !== THREAD_NOT_FOUND
-    ) {
-      unsubscribeFromMessages = listenForMessages({
-        threadId: threadForHelpRequest,
-        setMessages,
-        setMessagesError: (e: Error) => {
-          console.error(e);
-        }
-      });
-      return () => {
-        unsubscribeFromMessages && unsubscribeFromMessages();
-        setMessagesError(
-          "An error occurred fetching messages. Please refresh the page."
-        );
-      };
-    }
-  }, [threadForHelpRequest]);
-
-  if (!currentUserId) {
+  if (threadResult.status === FetchResultStatus.AUTHENTICATION_REQUIRED) {
     return (
       <Redirect to={`/login?redirectTo=/request/${helpRequestId}/messages`} />
     );
@@ -109,24 +53,23 @@ export const MessageThreadPage: React.FC<RouteComponentProps<{
           <Error>{helpRequestResult.error}</Error>
         )}
       </div>
-      <List>
-        {messages &&
-          messages.map(message => (
+      {messagesResult.status === FetchResultStatus.FOUND && (
+        <List>
+          {messagesResult.result.map(message => (
             <li key={message.id}>
               <MessageCard message={message} />
             </li>
           ))}
-      </List>
+        </List>
+      )}
+      {messagesResult.status === FetchResultStatus.LOADING && <Loading />}
+      {messagesResult.status === FetchResultStatus.ERROR && (
+        <Error>{messagesResult.error}</Error>
+      )}
       <MessageInput
-        helpRequest={helpRequestResult.result}
-        threadId={
-          threadForHelpRequest !== FINDING_THREAD &&
-          threadForHelpRequest !== THREAD_NOT_FOUND
-            ? threadForHelpRequest
-            : undefined
-        }
-        setThread={setThreadForHelpRequest}
-        disabled={threadForHelpRequest === FINDING_THREAD}
+        helpRequestResult={helpRequestResult}
+        threadResult={threadResult}
+        triggerThreadRefresh={() => setDidCreateThread(true)}
       />
     </DefaultLayout>
   );

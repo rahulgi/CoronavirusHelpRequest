@@ -1,7 +1,7 @@
 import * as firebase from "firebase/app";
 
 import { getAuth } from "../auth";
-import { getFirestore, Collections } from ".";
+import { getFirestore, Collections, CreateResultStatus, CreateResult } from ".";
 
 /**
  * The shape of a Thread in Firestore.
@@ -165,11 +165,17 @@ export function listenForMessages({
 export async function createMessage({
   threadId,
   message
-}: Omit<Message, "id" | "createdAt" | "updatedAt" | "creatorId">) {
+}: Omit<Message, "id" | "createdAt" | "updatedAt" | "creatorId">): Promise<
+  CreateResult<Message>
+> {
   const currentUser = getAuth().currentUser;
 
   if (!currentUser) {
-    throw new Error("There is no logged in user!");
+    return {
+      status: CreateResultStatus.AUTHENTICATI0N_REQUIRED,
+      result: undefined,
+      error: undefined
+    };
   }
 
   const newDoc: Omit<MessageDocument, "id"> = {
@@ -187,11 +193,17 @@ export async function createMessage({
       last_message_at: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-  return (
-    await getFirestore()
-      .collection(Collections.Messages)
-      .add(newDoc)
-  ).id;
+  return {
+    status: CreateResultStatus.CREATED,
+    result: mapQueryDocToMessage(
+      await (
+        await getFirestore()
+          .collection(Collections.Messages)
+          .add(newDoc)
+      ).get()
+    ),
+    error: undefined
+  };
 }
 
 export async function createThread({
@@ -200,25 +212,41 @@ export async function createThread({
 }: Omit<
   Thread,
   "id" | "createdAt" | "updatedAt" | "creatorId" | "lastMessageAt"
->) {
+>): Promise<CreateResult<Thread>> {
   const currentUser = getAuth().currentUser;
 
   if (!currentUser) {
-    throw new Error("There is no logged in user!");
+    return {
+      status: CreateResultStatus.AUTHENTICATI0N_REQUIRED,
+      result: undefined,
+      error: undefined
+    };
   }
+
+  const allParticipants: string[] = Array.from(
+    new Set(participantIds).add(currentUser.uid).values()
+  );
+
+  // Todo maybe verify that a thread doesn't already exist?
 
   const newDoc: Omit<ThreadDocument, "id"> = {
     created_at: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp,
     updated_at: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp,
     creator_id: currentUser.uid,
     help_request_id: helpRequestId,
-    participant_ids: participantIds,
+    participant_ids: allParticipants,
     last_message_at: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp
   };
 
-  return (
-    await getFirestore()
-      .collection(Collections.Threads)
-      .add(newDoc)
-  ).id;
+  return {
+    status: CreateResultStatus.CREATED,
+    result: mapQueryDocToThread(
+      await (
+        await getFirestore()
+          .collection(Collections.Threads)
+          .add(newDoc)
+      ).get()
+    ),
+    error: undefined
+  };
 }
