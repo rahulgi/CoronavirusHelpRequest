@@ -49,7 +49,7 @@ export function useThread({
           result: undefined,
           error: undefined
         };
-  }, [currentUserId, helpRequestId, didCreateThread]);
+  }, [currentUserId, helpRequestId]);
   const handleThreadResult = useCallback(setThreadResult, []);
   const handleThreadError = useCallback((e: Error) => {
     console.error(e);

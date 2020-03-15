@@ -2,6 +2,8 @@ import React, { useState, useContext } from "react";
 import * as firebase from "firebase/app";
 
 import { getAuth } from "../../../firebase/auth";
+import { User, getUser, createUser } from "../../../firebase/storage/user";
+import { CreateResultStatus } from "../../../firebase/storage";
 
 const auth = getAuth();
 
@@ -13,7 +15,7 @@ export enum AuthStatus {
 type AuthState =
   | {
       status: AuthStatus.LOGGED_IN;
-      user: firebase.User;
+      user: User;
     }
   | {
       status: AuthStatus.LOGGED_OUT;
@@ -36,10 +38,53 @@ export function logoutAuthState() {
   }
 }
 
-export function updateAuthState(user: firebase.User | null) {
+function getDisplayName(user: firebase.User): string | undefined {
+  if (user.displayName) {
+    return user.displayName;
+  }
+  for (const providerData of user.providerData) {
+    if (providerData?.displayName) {
+      return providerData.displayName;
+    }
+  }
+  return undefined;
+}
+
+function getProfilePicture(user: firebase.User) {
+  if (user.photoURL) {
+    return user.photoURL;
+  }
+  for (const providerData of user.providerData) {
+    if (providerData?.photoURL) {
+      return providerData.photoURL;
+    }
+  }
+  return undefined;
+}
+
+export async function updateAuthState(firebaseUser: firebase.User | null) {
   if (setAuthState) {
-    if (user) {
-      return setAuthState({ user, status: AuthStatus.LOGGED_IN });
+    if (firebaseUser) {
+      const user = await getUser(firebaseUser.uid);
+      if (user) {
+        return setAuthState({
+          user,
+          status: AuthStatus.LOGGED_IN
+        });
+      }
+      const createUserResult = await createUser({
+        id: firebaseUser.uid,
+
+        displayName: getDisplayName(firebaseUser),
+        profileUrl: getProfilePicture(firebaseUser)
+      });
+
+      if (createUserResult.status === CreateResultStatus.CREATED) {
+        return setAuthState({
+          user: createUserResult.result,
+          status: AuthStatus.LOGGED_IN
+        });
+      }
     }
     return logoutAuthState();
   }
@@ -63,5 +108,5 @@ export function useAuthStatus(): AuthStatus {
 }
 
 export function useCurrentUserId(): string | undefined {
-  return useContext(AuthContext).user?.uid;
+  return useContext(AuthContext).user?.id;
 }

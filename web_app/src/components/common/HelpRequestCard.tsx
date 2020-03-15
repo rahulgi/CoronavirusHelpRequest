@@ -14,6 +14,7 @@ import {
 } from "../contexts/AuthContext";
 import { Card } from "./Card";
 import { UpdateResultStatus } from "../../firebase/storage";
+import { UserChip } from "./UserChip";
 
 const StyledLink = styled(Link)`
   color: inherit;
@@ -71,6 +72,7 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
 
   const cardContents = (
     <Card>
+      <UserChip userId={creatorId} />
       {isOwnRequest && <p>You created this request</p>}
       <h3>{title}</h3>
       <p>Created at: {createdAt.toLocaleString()}</p>

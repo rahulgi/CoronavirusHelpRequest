@@ -1,20 +1,13 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
 
 import { DefaultLayout } from "../common/DefaultLayout";
-import {
-  Message,
-  listenForMessages,
-  getThread
-} from "../../firebase/storage/messaging";
 import { RouteComponentProps, Redirect } from "react-router-dom";
-import { useCurrentUserId } from "../contexts/AuthContext";
-import { useAsyncEffect } from "../../hooks/useAsyncEffect";
 import { List } from "../common/List";
 import { MessageCard } from "../MessageCard";
 import { MessageInput } from "../MessageInput";
 import { useHelpRequest } from "../../hooks/data/useHelpRequest";
 import { HelpRequestCard } from "../common/HelpRequestCard";
-import { FetchResultStatus, FetchResult } from "../../hooks/data";
+import { FetchResultStatus } from "../../hooks/data";
 import { Error } from "../common/Error";
 import { Loading } from "../common/Loading";
 import { NotFound } from "../common/NotFound";

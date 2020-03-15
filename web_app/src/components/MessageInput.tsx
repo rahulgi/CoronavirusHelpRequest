@@ -8,7 +8,6 @@ import {
   Message
 } from "../firebase/storage/messaging";
 import { HelpRequest } from "../firebase/storage/helpRequest";
-import { useCurrentUserId } from "./contexts/AuthContext";
 import { ThreadResult } from "../hooks/data/useThread";
 import { HelpRequestResult } from "../hooks/data/useHelpRequest";
 import { FetchResultStatus } from "../hooks/data";
