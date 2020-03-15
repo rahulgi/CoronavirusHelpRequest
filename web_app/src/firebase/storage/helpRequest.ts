@@ -1,7 +1,14 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 
-import { getFirestore, Collections } from ".";
+import {
+  getFirestore,
+  Collections,
+  CreateResult,
+  CreateResultStatus,
+  UpdateResult,
+  UpdateResultStatus
+} from ".";
 import { getAuth } from "../auth";
 
 export enum HelpRequestStatus {
@@ -72,11 +79,15 @@ export async function createHelpRequest({
 }: Omit<
   HelpRequest,
   "id" | "createdAt" | "updatedAt" | "status" | "creatorId"
->): Promise<string> {
+>): Promise<CreateResult<HelpRequest>> {
   const currentUser = getAuth().currentUser;
 
   if (!currentUser) {
-    throw new Error("There is no logged in user!");
+    return {
+      status: CreateResultStatus.AUTHENTICATI0N_REQUIRED,
+      result: undefined,
+      error: undefined
+    };
   }
 
   const newDoc: Omit<HelpRequestDocument, "id"> = {
@@ -89,11 +100,17 @@ export async function createHelpRequest({
     location: new firebase.firestore.GeoPoint(0, 0)
   };
 
-  return (
-    await getFirestore()
-      .collection(Collections.HelpRequests)
-      .add(newDoc)
-  ).id;
+  return {
+    status: CreateResultStatus.CREATED,
+    result: mapQueryDocToHelpRequest(
+      await (
+        await getFirestore()
+          .collection(Collections.HelpRequests)
+          .add(newDoc)
+      ).get()
+    ),
+    error: undefined
+  };
 }
 
 export async function updateHelpRequestStatus({
@@ -102,11 +119,30 @@ export async function updateHelpRequestStatus({
 }: {
   id: string;
   status: HelpRequestStatus;
-}) {
+}): Promise<UpdateResult<HelpRequest>> {
+  if (!getAuth().currentUser) {
+    return {
+      status: UpdateResultStatus.AUTHENTICATI0N_REQUIRED,
+      result: undefined,
+      error: undefined
+    };
+  }
+
   await getFirestore()
     .collection(Collections.HelpRequests)
     .doc(id)
     .update({ status });
+
+  return {
+    status: UpdateResultStatus.UPDATED,
+    result: mapQueryDocToHelpRequest(
+      await getFirestore()
+        .collection(Collections.HelpRequests)
+        .doc(id)
+        .get()
+    ),
+    error: undefined
+  };
 }
 
 export async function getHelpRequest({

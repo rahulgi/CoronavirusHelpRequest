@@ -13,6 +13,7 @@ import {
   AuthStatus
 } from "../contexts/AuthContext";
 import { Card } from "./Card";
+import { UpdateResultStatus } from "../../firebase/storage";
 
 const StyledLink = styled(Link)`
   color: inherit;
@@ -38,6 +39,7 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
 
   const { id, createdAt, creatorId, title, body } = request;
   const [status, setStatus] = useState<HelpRequestStatus>(request.status);
+  const [updating, setUpdating] = useState(false);
 
   const authStatus = useAuthStatus();
   const isLoggedIn = authStatus === AuthStatus.LOGGED_IN;
@@ -55,9 +57,15 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
   function onSetStatusClickCreator(newStatus: HelpRequestStatus) {
     return async (e: React.MouseEvent) => {
       e.preventDefault();
-      await updateHelpRequestStatus({ id, status: newStatus });
-      setStatus(newStatus);
-      return true;
+      setUpdating(true);
+      const updateResult = await updateHelpRequestStatus({
+        id,
+        status: newStatus
+      });
+      if (updateResult.status === UpdateResultStatus.UPDATED) {
+        setStatus(newStatus);
+      }
+      setUpdating(false);
     };
   }
 
@@ -74,6 +82,7 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
             (status === HelpRequestStatus.ACTIVE && (
               <button
                 onClick={onSetStatusClickCreator(HelpRequestStatus.CLAIMED)}
+                disabled={updating}
               >
                 Mark as In Progress
               </button>
@@ -81,6 +90,7 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
             (status === HelpRequestStatus.CLAIMED && (
               <button
                 onClick={onSetStatusClickCreator(HelpRequestStatus.RESOLVED)}
+                disabled={updating}
               >
                 Mark as Resolved
               </button>

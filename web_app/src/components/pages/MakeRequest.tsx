@@ -6,6 +6,7 @@ import { useHistory, Redirect } from "react-router-dom";
 import { spacing } from "../helpers/styles";
 import { useAuthStatus, AuthStatus } from "../contexts/AuthContext";
 import { createHelpRequest } from "../../firebase/storage/helpRequest";
+import { CreateResultStatus } from "../../firebase/storage";
 
 const Form = styled.form`
   display: flex;
@@ -38,8 +39,11 @@ export const MakeRequestPage: React.FC = () => {
   async function submitRequest(e: React.FormEvent) {
     e.preventDefault();
     // TODO validate, show errors
-    const newRequestId = await createHelpRequest({ title, body });
-    history.push(`/request/${newRequestId}`);
+    const createResult = await createHelpRequest({ title, body });
+
+    if (createResult.status === CreateResultStatus.CREATED) {
+      history.push(`/request/${createResult.result.id}`);
+    }
   }
 
   if (loggedInStatus === AuthStatus.LOGGED_OUT) {

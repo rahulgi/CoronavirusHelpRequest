@@ -32,6 +32,29 @@ export type CreateResult<ResultType> =
       error: string;
     };
 
+export enum UpdateResultStatus {
+  UPDATED = "UPDATED",
+  AUTHENTICATI0N_REQUIRED = "AUTHENTICATION_REQUIRED",
+  ERROR = "ERROR"
+}
+
+export type UpdateResult<ResultType> =
+  | {
+      status: UpdateResultStatus.UPDATED;
+      result: ResultType;
+      error: undefined;
+    }
+  | {
+      status: UpdateResultStatus.AUTHENTICATI0N_REQUIRED;
+      result: undefined;
+      error: undefined;
+    }
+  | {
+      status: UpdateResultStatus.ERROR;
+      result: undefined;
+      error: string;
+    };
+
 export function getFirestore() {
   initFirebase();
   return firebase.firestore();
