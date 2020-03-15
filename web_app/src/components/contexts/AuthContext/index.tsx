@@ -58,6 +58,10 @@ export const AuthProvider: React.FC<{}> = ({ children }) => {
   );
 };
 
-export function useLoggedInStatus(): AuthStatus {
+export function useAuthStatus(): AuthStatus {
   return useContext(AuthContext).status;
+}
+
+export function useCurrentUserId(): string | undefined {
+  return useContext(AuthContext).user?.uid;
 }

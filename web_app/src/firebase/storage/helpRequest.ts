@@ -2,6 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/firestore";
 
 import { getFirestore, Collections } from ".";
+import { getAuth } from "../auth";
 
 export enum HelpRequestStatus {
   ACTIVE = "ACTIVE",
@@ -16,6 +17,7 @@ interface HelpRequestDocument {
   created_at: firebase.firestore.Timestamp | null;
   updated_at: firebase.firestore.Timestamp | null;
 
+  creator_id: string;
   title: string;
   body: string;
   status: HelpRequestStatus;
@@ -31,6 +33,8 @@ export interface HelpRequest {
   id: string;
   createdAt: Date;
   updatedAt: Date;
+
+  creatorId: string;
   title: string;
   body: string;
   status: HelpRequestStatus;
@@ -46,6 +50,7 @@ export function mapQueryDocToHelpRequest(
   const {
     created_at,
     updated_at,
+    creator_id,
     title,
     body,
     status
@@ -54,6 +59,7 @@ export function mapQueryDocToHelpRequest(
     id,
     createdAt: created_at ? created_at.toDate() : new Date(),
     updatedAt: updated_at ? updated_at.toDate() : new Date(),
+    creatorId: creator_id,
     title,
     body,
     status
@@ -63,12 +69,20 @@ export function mapQueryDocToHelpRequest(
 export async function createHelpRequest({
   title,
   body
-}: Omit<HelpRequest, "id" | "createdAt" | "updatedAt" | "status">): Promise<
-  string
-> {
+}: Omit<
+  HelpRequest,
+  "id" | "createdAt" | "updatedAt" | "status" | "creatorId"
+>): Promise<string> {
+  const currentUser = getAuth().currentUser;
+
+  if (!currentUser) {
+    throw new Error("There is no logged in user!");
+  }
+
   const newDoc: Omit<HelpRequestDocument, "id"> = {
     created_at: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp,
     updated_at: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp,
+    creator_id: currentUser.uid,
     title,
     body,
     status: HelpRequestStatus.ACTIVE,
@@ -80,6 +94,19 @@ export async function createHelpRequest({
       .collection(Collections.HelpRequests)
       .add(newDoc)
   ).id;
+}
+
+export async function updateHelpRequestStatus({
+  id,
+  status
+}: {
+  id: string;
+  status: HelpRequestStatus;
+}) {
+  await getFirestore()
+    .collection(Collections.HelpRequests)
+    .doc(id)
+    .update({ status });
 }
 
 export async function getHelpRequest({

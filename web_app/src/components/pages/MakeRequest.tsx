@@ -4,7 +4,7 @@ import styled from "@emotion/styled/macro";
 import { DefaultLayout } from "../common/DefaultLayout";
 import { useHistory, Redirect } from "react-router-dom";
 import { spacing } from "../helpers/styles";
-import { useLoggedInStatus, AuthStatus } from "../contexts/AuthContext";
+import { useAuthStatus, AuthStatus } from "../contexts/AuthContext";
 import { createHelpRequest } from "../../firebase/storage/helpRequest";
 
 const Form = styled.form`
@@ -25,7 +25,7 @@ const Form = styled.form`
 
 export const MakeRequestPage: React.FC = () => {
   const history = useHistory();
-  const loggedInStatus = useLoggedInStatus();
+  const loggedInStatus = useAuthStatus();
 
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState<string | undefined>();

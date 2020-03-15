@@ -3,7 +3,7 @@ import styled from "@emotion/styled/macro";
 
 import { spacing } from "../helpers/styles";
 import { Link } from "react-router-dom";
-import { useLoggedInStatus, AuthStatus } from "../contexts/AuthContext";
+import { useAuthStatus, AuthStatus } from "../contexts/AuthContext";
 
 const NavBar = styled.div`
   display: flex;
@@ -24,7 +24,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
   children,
   pageTitle
 }) => {
-  const isLoggedIn = useLoggedInStatus() === AuthStatus.LOGGED_IN;
+  const isLoggedIn = useAuthStatus() === AuthStatus.LOGGED_IN;
 
   return (
     <div className="app">

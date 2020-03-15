@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled/macro";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { spacing } from "../helpers/styles";
-import { HelpRequest } from "../../firebase/storage/helpRequest";
+import {
+  HelpRequest,
+  HelpRequestStatus,
+  updateHelpRequestStatus
+} from "../../firebase/storage/helpRequest";
+import {
+  useCurrentUserId,
+  useAuthStatus,
+  AuthStatus
+} from "../contexts/AuthContext";
 
 const StyledLink = styled(Link)`
   color: inherit;
@@ -16,6 +25,10 @@ const Card = styled.div`
   padding: ${spacing.s};
 `;
 
+const Actions = styled.div`
+  display: flex;
+`;
+
 interface HelpRequestCardProps {
   request: HelpRequest;
   isLink?: boolean;
@@ -25,14 +38,62 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
   request,
   isLink = false
 }) => {
-  const { id, createdAt, title, body, status } = request;
+  const history = useHistory();
+
+  const { id, createdAt, creatorId, title, body } = request;
+  const [status, setStatus] = useState<HelpRequestStatus>(request.status);
+
+  const authStatus = useAuthStatus();
+  const isLoggedIn = authStatus === AuthStatus.LOGGED_IN;
+  const currentUserId = useCurrentUserId();
+  const isOwnRequest = isLoggedIn && creatorId === currentUserId;
+
+  function onSendMessageClick(e: React.MouseEvent) {
+    e.preventDefault();
+    const requestMessageUrl = `/request/${id}/message`;
+    isLoggedIn
+      ? history.push(requestMessageUrl)
+      : history.push(`/login?redirectTo=${requestMessageUrl}`);
+  }
+
+  function onSetStatusClickCreator(newStatus: HelpRequestStatus) {
+    return async (e: React.MouseEvent) => {
+      e.preventDefault();
+      await updateHelpRequestStatus({ id, status: newStatus });
+      setStatus(newStatus);
+      return true;
+    };
+  }
 
   const cardContents = (
     <Card>
+      {isOwnRequest && <p>You created this request</p>}
       <h3>{title}</h3>
       <p>Created at: {createdAt.toLocaleString()}</p>
       <p>Status: {status}</p>
       <p>{body}</p>
+      <Actions>
+        {isOwnRequest ? (
+          (status === HelpRequestStatus.ACTIVE && (
+            <button
+              onClick={onSetStatusClickCreator(HelpRequestStatus.CLAIMED)}
+            >
+              Mark as In Progress
+            </button>
+          )) ||
+          (status === HelpRequestStatus.CLAIMED && (
+            <button
+              onClick={onSetStatusClickCreator(HelpRequestStatus.RESOLVED)}
+            >
+              Mark as Resolved
+            </button>
+          ))
+        ) : (
+          <>
+            <button onClick={onSendMessageClick}>Send a message</button>
+          </>
+        )}
+      </Actions>
     </Card>
   );
 
