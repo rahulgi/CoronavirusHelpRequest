@@ -6,6 +6,7 @@ import {
   mapQueryDocToHelpRequest
 } from "../firebase/storage";
 import { HelpRequest, HelpRequestCard } from "./common/HelpRequestCard";
+import { useAsyncEffect } from "../hooks/useAsyncEffect";
 
 const storage = getFirestore();
 
@@ -19,8 +20,10 @@ async function getHelpRequests(): Promise<HelpRequest[]> {
 export const HelpRequestsList: React.FC = () => {
   const [requests, setRequests] = useState<HelpRequest[]>();
 
-  useEffect(() => {
-    getHelpRequests().then(result => setRequests(result));
+  useAsyncEffect({
+    asyncOperation: getHelpRequests,
+    handleResponse: setRequests,
+    handleError: e => console.error(e)
   });
 
   return (
