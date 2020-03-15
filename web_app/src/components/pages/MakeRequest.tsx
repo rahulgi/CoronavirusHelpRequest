@@ -2,11 +2,7 @@ import React, { useState } from "react";
 import styled from "@emotion/styled/macro";
 
 import { DefaultLayout } from "../common/DefaultLayout";
-import {
-  getFirestore,
-  Collections,
-  createHelpRequest
-} from "../../firebase/storage";
+import { createHelpRequest } from "../../firebase/storage";
 import { useHistory } from "react-router-dom";
 import { spacing } from "../helpers/styles";
 
@@ -35,8 +31,11 @@ export const MakeRequestPage: React.FC = () => {
   const [body, setBody] = useState("");
   const [bodyError, setBodyError] = useState<string | undefined>();
 
+  const [submissionError, setSubmissionError] = useState<string | undefined>();
+
   async function submitRequest(e: React.FormEvent) {
     e.preventDefault();
+    // TODO validate, show errors
     const newRequestId = await createHelpRequest({ title, body });
     history.push(`/request/${newRequestId}`);
   }
