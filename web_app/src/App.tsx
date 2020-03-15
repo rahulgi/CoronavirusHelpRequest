@@ -5,6 +5,7 @@ import "./App.css";
 import { BrowsePage } from "./components/pages/Browse";
 import { LoginPage } from "./components/pages/Login";
 import { AuthProvider } from "./components/contexts/AuthContext";
+import { LogoutPage } from "./components/pages/Logout";
 
 function App() {
   return (
@@ -16,6 +17,9 @@ function App() {
           </Route>
           <Route path="/login" exact>
             <LoginPage />
+          </Route>
+          <Route path="/logout" exact>
+            <LogoutPage />
           </Route>
         </Switch>
       </Router>

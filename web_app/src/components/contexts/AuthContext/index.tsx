@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import * as firebase from "firebase/app";
 
 import { getAuth } from "../../../firebase/auth";
@@ -53,23 +53,6 @@ export const AuthProvider: React.FC<{}> = ({ children }) => {
   const [authState, authStateSetter] = useState<AuthState>(INITIAL_AUTH_STATE);
   setAuthState = authStateSetter;
 
-  // async function fetchAuthState() {
-  //   try {
-  //     const user = await queryApi(ApiRouteName.GET_ME, {
-  //       routeTokens: {},
-  //       queryParams: {},
-  //       body: {}
-  //     });
-  //     return updateAuthState(user);
-  //   } catch (e) {
-  //     logoutAuthState();
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   fetchAuthState();
-  // }, []);
-
   return (
     <AuthContext.Provider value={authState}>{children}</AuthContext.Provider>
   );
@@ -78,13 +61,3 @@ export const AuthProvider: React.FC<{}> = ({ children }) => {
 export function useLoggedIn(): AuthStatus {
   return useContext(AuthContext).status;
 }
-
-// export function useLoggedInUser(): PersonalUser {
-//   const authState = useContext(AuthContext);
-//   if (authState.status !== AuthStatus.LOGGED_IN) {
-//     throw Error(
-//       "Can only call useLoggedInAuthContext from an authenticated route"
-//     );
-//   }
-//   return authState.user;
-// }

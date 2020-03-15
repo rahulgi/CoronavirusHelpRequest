@@ -1,7 +1,9 @@
 import React from "react";
 import styled from "@emotion/styled/macro";
+
 import { spacing } from "../helpers/styles";
 import { Link } from "react-router-dom";
+import { useLoggedIn, AuthStatus } from "../contexts/AuthContext";
 
 const NavBar = styled.div`
   display: flex;
@@ -18,13 +20,19 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
   children,
   pageTitle
 }) => {
+  const isLoggedIn = useLoggedIn() === AuthStatus.LOGGED_IN;
+
   return (
     <div className="app">
       <div>
-        <h1>Corvid19 Help Request</h1>
+        <h1>Covid19 Help Request</h1>
         <NavBar>
           <Link to="/">Browse help requests</Link>
-          <Link to="/login">Login</Link>
+          {isLoggedIn ? (
+            <Link to="/logout">Logout</Link>
+          ) : (
+            <Link to="/login">Login</Link>
+          )}
         </NavBar>
       </div>
       <div>
