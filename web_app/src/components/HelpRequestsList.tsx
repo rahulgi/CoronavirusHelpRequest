@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import styled from "@emotion/styled/macro";
 
 import {
   getFirestore,
@@ -7,15 +8,22 @@ import {
 } from "../firebase/storage";
 import { HelpRequest, HelpRequestCard } from "./common/HelpRequestCard";
 import { useAsyncEffect } from "../hooks/useAsyncEffect";
-
-const storage = getFirestore();
+import { spacing } from "./helpers/styles";
 
 async function getHelpRequests(): Promise<HelpRequest[]> {
-  const querySnapshot = await storage
+  const querySnapshot = await getFirestore()
     .collection(Collections.HelpRequests)
     .get();
   return querySnapshot.docs.map(mapQueryDocToHelpRequest);
 }
+
+const List = styled.ul`
+  list-style-type: none;
+
+  & *:not(:last-child) {
+    margin-bottom: ${spacing.m};
+  }
+`;
 
 export const HelpRequestsList: React.FC = () => {
   const [requests, setRequests] = useState<HelpRequest[]>();
@@ -32,14 +40,14 @@ export const HelpRequestsList: React.FC = () => {
 
   return (
     <div>
-      <ul>
+      <List>
         {requests &&
           requests.map(request => (
             <li key={request.id}>
-              <HelpRequestCard request={request} />
+              <HelpRequestCard request={request} isLink />
             </li>
           ))}
-      </ul>
+      </List>
     </div>
   );
 };
