@@ -236,8 +236,6 @@ export async function getHelpRequests({
     Collections.HelpRequests
   );
 
-  console.log(filters);
-
   if (filters) {
     const { locationFilter } = filters;
     if (locationFilter) {
@@ -247,7 +245,6 @@ export async function getHelpRequests({
         location.lng,
         distance
       );
-      console.log("upper", upper, "lower", lower);
       query = query
         .orderBy("geohash", "desc")
         .where("geohash", ">=", lower)

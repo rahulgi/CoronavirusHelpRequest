@@ -5,6 +5,9 @@ import { useLocation, LocationStatus } from "../../hooks/useLocation";
 import { Form } from "./Form";
 import { Location } from "../helpers/location";
 import { spacing } from "../../styles/spacing";
+import { PALETTE } from "../../styles/colors";
+import { HelpRequestsResult } from "../../hooks/data/useHelpRequests";
+import { FetchResultStatus } from "../../hooks/data";
 
 const MapContainer = styled.div`
   width: 100%;
@@ -26,6 +29,7 @@ const MAP_CONTAINER_ID = "map-container";
 let map: google.maps.Map | undefined = undefined;
 let mapMarker: google.maps.Marker | undefined = undefined;
 let mapCircle: google.maps.Circle | undefined = undefined;
+let helpRequestCircles: google.maps.Circle[] | undefined;
 let searchBox: google.maps.places.SearchBox | undefined = undefined;
 let geocoder: google.maps.Geocoder | undefined = undefined;
 const ONE_KILOMETER = 1000; // 1000 meters
@@ -34,11 +38,15 @@ const AsyncMap: React.FC<{
   google: undefined | typeof window.google;
   startingLocation: Location;
   startingLocationName: string;
+  locationColor: string;
+  helpRequestsResult?: HelpRequestsResult;
   onLocationChanged: (location: Location) => void;
 }> = ({
   google,
   startingLocation,
   startingLocationName,
+  locationColor,
+  helpRequestsResult,
   onLocationChanged
 }) => {
   const mapsRef = useRef<HTMLDivElement>();
@@ -73,10 +81,10 @@ const AsyncMap: React.FC<{
       });
 
       mapCircle = new google.maps.Circle({
-        strokeColor: "#FF0000",
+        strokeColor: locationColor,
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: "#FF0000",
+        fillColor: locationColor,
         fillOpacity: 0.35,
         map: map,
         center: mapLocation,
@@ -104,6 +112,30 @@ const AsyncMap: React.FC<{
   }, [google, mapsRef]);
 
   useEffect(() => {
+    if (
+      google &&
+      helpRequestsResult &&
+      helpRequestsResult.status === FetchResultStatus.FOUND
+    ) {
+      helpRequestCircles &&
+        helpRequestCircles.map(circle => circle.setMap(null));
+      helpRequestCircles = helpRequestsResult.result.map(result => {
+        return new google.maps.Circle({
+          strokeColor: PALETTE.red,
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: PALETTE.red,
+          fillOpacity: 0.35,
+          map: map,
+          center: result.location,
+          radius: ONE_KILOMETER,
+          clickable: false
+        });
+      });
+    }
+  }, [helpRequestsResult, google]);
+
+  useEffect(() => {
     if (google && searchBoxRef.current) {
       searchBox = new google.maps.places.SearchBox(searchBoxRef.current);
 
@@ -113,7 +145,7 @@ const AsyncMap: React.FC<{
           if (google && searchBox) {
             var places = searchBox.getPlaces();
 
-            if (places.length == 0) {
+            if (places.length === 0) {
               return;
             }
 
@@ -177,12 +209,6 @@ const AsyncMap: React.FC<{
       <Form onSubmit={e => e.preventDefault()}>
         <div>
           <label htmlFor="location">Where are you?</label>
-          <p>
-            Select the general location that you're looking for help in. This is
-            just to help find people who can help near you, so it doesn't need
-            to be your exact address. You can communicate your address later if
-            need be.
-          </p>
           <LocationInputLine>
             <SearchBoxComponent
               type="text"
@@ -194,7 +220,7 @@ const AsyncMap: React.FC<{
             />
           </LocationInputLine>
         </div>
-        <div>or</div>
+        {/* <div>or</div>
         <div>
           <LocationInputLine>
             <button
@@ -209,9 +235,9 @@ const AsyncMap: React.FC<{
             </button>
           </LocationInputLine>
         </div>
-        <div>or</div>
+        <div>or</div> */}
         <div>
-          <label>Select location on map</label>
+          {/* <label>Select location on map</label> */}
           <MapContainer
             id={MAP_CONTAINER_ID}
             ref={r => r && (mapsRef.current = r)}

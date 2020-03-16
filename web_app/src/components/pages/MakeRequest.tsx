@@ -43,6 +43,11 @@ export const MakeRequestPage: React.FC = () => {
 
   return (
     <DefaultLayout pageTitle="Request help">
+      <p>
+        Select the location that you're looking for help in. This is just to
+        help find people who can help near you, so it doesn't need to be your
+        exact address.
+      </p>
       <Map
         startingLocation={location}
         startingLocationName={DEFAULT_LOCATION_NAME}
@@ -56,7 +61,7 @@ export const MakeRequestPage: React.FC = () => {
             name="title"
             onChange={e => setTitle(e.target.value)}
             value={title}
-            placeholder="Enter a short title"
+            placeholder="I need someone to pick up my prescriptions for me."
           />
         </div>
 
@@ -66,7 +71,7 @@ export const MakeRequestPage: React.FC = () => {
             name="body"
             onChange={e => setBody(e.target.value)}
             value={body}
-            placeholder="Enter any more relevant details about your request"
+            placeholder="My pharmacy is the Walgreens at 8th Ave and Mission St."
           />
         </div>
 
