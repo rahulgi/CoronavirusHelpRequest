@@ -13,3 +13,10 @@
 Run: `yarn deploy`
 
 - This will build the React app and then deploy to Firebase.
+
+## Material design
+
+We're using the Material Design Web components documented
+[here](https://github.com/material-components/material-components-web).
+
+[Example](https://material-components.github.io/material-components-web-catalog/#/component/button)
