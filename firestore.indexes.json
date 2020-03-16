@@ -25,6 +25,19 @@
           "mode": "DESCENDING"
         }
       ]
+    },
+    {
+      "collectionId": "help_request",
+      "fields": [
+        {
+          "fieldPath": "geocache",
+          "mode": "DESCENDING"
+        },
+        {
+          "fieldPath": "created_at",
+          "mode": "DESCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []

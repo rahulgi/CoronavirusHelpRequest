@@ -80,7 +80,8 @@ const AsyncMap: React.FC<{
         fillOpacity: 0.35,
         map: map,
         center: mapLocation,
-        radius: ONE_KILOMETER
+        radius: ONE_KILOMETER,
+        clickable: false
       });
 
       const clickListener = map.addListener("click", function(e) {

@@ -7,12 +7,11 @@ import { createHelpRequest } from "../../firebase/storage/helpRequest";
 import { CreateResultStatus } from "../../firebase/storage";
 import { Map } from "../common/Map";
 import { Form } from "../common/Form";
-import { Location } from "../helpers/location";
-
-const SAN_FRANCISCO: Location = {
-  lng: -122.42905,
-  lat: 37.77986
-};
+import {
+  Location,
+  DEFAULT_LOCATION_NAME,
+  DEFAULT_LOCATION
+} from "../helpers/location";
 
 export const MakeRequestPage: React.FC = () => {
   const history = useHistory();
@@ -24,7 +23,7 @@ export const MakeRequestPage: React.FC = () => {
   const [body, setBody] = useState("");
   const [bodyError, setBodyError] = useState<string | undefined>();
 
-  const [location, setLocation] = useState<Location>(SAN_FRANCISCO);
+  const [location, setLocation] = useState<Location>(DEFAULT_LOCATION);
 
   const [submissionError, setSubmissionError] = useState<string | undefined>();
 
@@ -46,7 +45,7 @@ export const MakeRequestPage: React.FC = () => {
     <DefaultLayout pageTitle="Request help">
       <Map
         startingLocation={location}
-        startingLocationName="San Francisco, California, USA"
+        startingLocationName={DEFAULT_LOCATION_NAME}
         onLocationChanged={setLocation}
       />
       <Form onSubmit={submitRequest}>

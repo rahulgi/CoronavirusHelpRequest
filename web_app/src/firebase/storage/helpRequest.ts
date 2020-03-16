@@ -1,5 +1,6 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
+import geohash from "ngeohash";
 
 import {
   getFirestore,
@@ -10,7 +11,10 @@ import {
   UpdateResultStatus
 } from ".";
 import { getAuth } from "../auth";
-import { Location } from "../../components/helpers/location";
+import {
+  Location,
+  getDistanceFromLatLngInKm
+} from "../../components/helpers/location";
 
 export enum HelpRequestStatus {
   ACTIVE = "ACTIVE",
@@ -30,6 +34,8 @@ interface HelpRequestDocument {
   body: string;
   status: HelpRequestStatus;
   location: firebase.firestore.GeoPoint;
+  // See https://levelup.gitconnected.com/nearby-location-queries-with-cloud-firestore-e7f4a2f18f9d
+  geohash: string;
 }
 
 /**
@@ -47,13 +53,18 @@ export interface HelpRequest {
   body: string;
   status: HelpRequestStatus;
   location: Location;
+  geohash: string;
+  // If a location filter is applied, then this will have the distance of the
+  // HelpRequest from that location.
+  distance?: number;
 }
 
 /**
  * Maps Firestore HelpRequest query snapshot to the local HelpRequest type.
  */
 function mapQueryDocToHelpRequest(
-  doc: firebase.firestore.DocumentSnapshot
+  doc: firebase.firestore.DocumentSnapshot,
+  locationForDistance?: Location
 ): HelpRequest {
   const id = doc.id;
   const {
@@ -63,8 +74,13 @@ function mapQueryDocToHelpRequest(
     title,
     body,
     status,
-    location
+    location: firebaseLocation,
+    geohash
   } = doc.data() as HelpRequestDocument;
+  const location: Location = {
+    lat: firebaseLocation.latitude,
+    lng: firebaseLocation.longitude
+  };
   return {
     id,
     createdAt: created_at ? created_at.toDate() : new Date(),
@@ -73,7 +89,11 @@ function mapQueryDocToHelpRequest(
     title,
     body,
     status,
-    location: { lat: location.latitude, lng: location.longitude }
+    location,
+    geohash,
+    distance: locationForDistance
+      ? getDistanceFromLatLngInKm(locationForDistance, location)
+      : undefined
   };
 }
 
@@ -83,7 +103,7 @@ export async function createHelpRequest({
   location
 }: Omit<
   HelpRequest,
-  "id" | "createdAt" | "updatedAt" | "status" | "creatorId"
+  "id" | "createdAt" | "updatedAt" | "status" | "creatorId" | "geohash"
 >): Promise<CreateResult<HelpRequest>> {
   const currentUser = getAuth().currentUser;
 
@@ -102,7 +122,8 @@ export async function createHelpRequest({
     title,
     body,
     status: HelpRequestStatus.ACTIVE,
-    location: new firebase.firestore.GeoPoint(location.lat, location.lng)
+    location: new firebase.firestore.GeoPoint(location.lat, location.lng),
+    geohash: geohash.encode(location.lat, location.lng)
   };
 
   return {
@@ -164,10 +185,77 @@ export async function getHelpRequest({
     : undefined;
 }
 
-export async function getHelpRequests(): Promise<HelpRequest[]> {
-  const querySnapshot = await getFirestore()
-    .collection(Collections.HelpRequests)
-    .orderBy("created_at", "desc")
-    .get();
-  return querySnapshot.docs.map(mapQueryDocToHelpRequest);
+/**
+ * Calculate the upper and lower boundary geohashes for a given latitude,
+ * longitude, and distance in miles.
+ *
+ * @param latitude
+ * @param longitude
+ * @param distance in kilometers
+ */
+const getGeohashRange = (
+  latitude: number,
+  longitude: number,
+  distance: number
+) => {
+  const lat = 0.009009009009; // approximate degrees latitude per kilometer
+  const lon = 0.01176470588; // approximate degrees longitude per kilometer at 40degrees
+
+  const lowerLat = latitude - lat * distance;
+  const lowerLon = longitude - lon * distance;
+
+  const upperLat = latitude + lat * distance;
+  const upperLon = longitude + lon * distance;
+
+  const lower = geohash.encode(lowerLat, lowerLon);
+  const upper = geohash.encode(upperLat, upperLon);
+
+  return {
+    lower,
+    upper
+  };
+};
+
+interface LocationFilter {
+  location: Location;
+  distance: number; // in kilometers
+}
+
+export interface HelpRequestFilters {
+  locationFilter?: LocationFilter;
+}
+
+export async function getHelpRequests({
+  filters
+}: {
+  filters?: HelpRequestFilters;
+}): Promise<HelpRequest[]> {
+  let query:
+    | firebase.firestore.CollectionReference
+    | firebase.firestore.Query = getFirestore().collection(
+    Collections.HelpRequests
+  );
+
+  if (filters) {
+    const { locationFilter } = filters;
+    if (locationFilter) {
+      const { location, distance } = locationFilter;
+      const { upper, lower } = getGeohashRange(
+        location.lat,
+        location.lng,
+        distance
+      );
+      query = query
+        .orderBy("geocache", "desc")
+        .where("geocache", ">=", lower)
+        .where("geocache", "<=", upper);
+    }
+  }
+
+  query = query.orderBy("created_at", "desc");
+
+  const querySnapshot = await query.get();
+  return querySnapshot.docs.map(doc =>
+    mapQueryDocToHelpRequest(doc, filters?.locationFilter?.location)
+  );
 }

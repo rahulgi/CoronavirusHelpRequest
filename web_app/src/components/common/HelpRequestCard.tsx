@@ -15,6 +15,7 @@ import {
 import { Card } from "./Card";
 import { UpdateResultStatus } from "../../firebase/storage";
 import { UserChip } from "./UserChip";
+import { Location, getDistanceFromLatLngInKm } from "../helpers/location";
 
 const StyledLink = styled(Link)`
   color: inherit;
@@ -29,16 +30,18 @@ interface HelpRequestCardProps {
   request: HelpRequest;
   isLink?: boolean;
   showActions?: boolean;
+  currentLocation?: Location;
 }
 
 export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
   request,
   isLink = false,
-  showActions = false
+  showActions = false,
+  currentLocation
 }) => {
   const history = useHistory();
 
-  const { id, createdAt, creatorId, title, body } = request;
+  const { id, createdAt, creatorId, title, body, location, distance } = request;
   const [status, setStatus] = useState<HelpRequestStatus>(request.status);
   const [updating, setUpdating] = useState(false);
 
@@ -77,6 +80,7 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
       <h3>{title}</h3>
       <p>Created at: {createdAt.toLocaleString()}</p>
       <p>Status: {status}</p>
+      {distance && <p>Distance from current location: {distance}km</p>}
       <p>{body}</p>
       {showActions && (
         <Actions>
