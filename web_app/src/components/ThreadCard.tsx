@@ -2,8 +2,8 @@ import React from "react";
 import styled from "@emotion/styled/macro";
 import { Link } from "react-router-dom";
 
-import { Card } from "./common/Card";
 import { Thread } from "../firebase/storage/messaging";
+import { Card } from "./common/Material/Card";
 
 const StyledLink = styled(Link)`
   color: inherit;

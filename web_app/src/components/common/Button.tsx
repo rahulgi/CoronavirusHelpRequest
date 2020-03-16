@@ -2,12 +2,14 @@ import React from "react";
 
 export enum ButtonType {
   PRIMARY = "PRIMARY",
-  SECONDARY = "SECONDARY"
+  SECONDARY = "SECONDARY",
+  TEXT_ONLY = "TEXT_ONLY"
 }
 
 const ButtonTypeToMaterialClassName: { [key in ButtonType]: string } = {
   [ButtonType.PRIMARY]: "mdc-button--raised",
-  [ButtonType.SECONDARY]: "mdc-button--outlined"
+  [ButtonType.SECONDARY]: "mdc-button--outlined",
+  [ButtonType.TEXT_ONLY]: ""
 };
 
 type ButtonProps = {

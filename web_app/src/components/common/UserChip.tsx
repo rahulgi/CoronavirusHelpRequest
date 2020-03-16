@@ -5,6 +5,7 @@ import { Avatar } from "./Avatar";
 import { FetchResultStatus } from "../../hooks/data";
 import { getDisplayNameOrDefault } from "../../hooks/data/useUser";
 import { spacing } from "../../styles/spacing";
+import { useCurrentUserId } from "../contexts/AuthContext";
 
 const Chip = styled.div`
   display: inline-flex;
@@ -17,6 +18,10 @@ const Chip = styled.div`
 
 export const UserChip: React.FC<{ userId: string }> = ({ userId }) => {
   const userResult = useUser(userId);
+  const currentUserId = useCurrentUserId();
+  const isSelf =
+    userResult.status === FetchResultStatus.FOUND &&
+    userResult.result.id === currentUserId;
   return (
     <Chip>
       <Avatar
@@ -26,7 +31,9 @@ export const UserChip: React.FC<{ userId: string }> = ({ userId }) => {
             : undefined
         }
       />
-      <h4>{getDisplayNameOrDefault(userResult)}</h4>
+      <span>
+        {getDisplayNameOrDefault(userResult)} {isSelf && "(You)"}
+      </span>
     </Chip>
   );
 };

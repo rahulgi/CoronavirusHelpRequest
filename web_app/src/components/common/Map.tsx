@@ -180,8 +180,8 @@ const AsyncMap: React.FC<{
           <p>
             Select the general location that you're looking for help in. This is
             just to help find people who can help near you, so it doesn't need
-            to be your exact address. You can tell your helper your address
-            later if need be.
+            to be your exact address. You can communicate your address later if
+            need be.
           </p>
           <LocationInputLine>
             <SearchBoxComponent

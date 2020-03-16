@@ -1,8 +1,8 @@
 import React from "react";
 
 import { Message } from "../firebase/storage/messaging";
-import { Card } from "./common/Card";
 import { UserChip } from "./common/UserChip";
+import { Card } from "./common/Material/Card";
 
 interface MessageCardProps {
   message: Message;

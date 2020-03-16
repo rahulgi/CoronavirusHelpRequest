@@ -4,7 +4,7 @@ import css from "@emotion/css/macro";
  * Imports some Material Design styles from
  * https://unpkg.com/material-components-web@5.1.0/dist/material-components-web.css
  * and applies them to base html elements so I don't have to apply the class
- * every time I want to use the style. Also updates the header font to Open Sans.
+ * every time I want to use the style. Also updates the header font to Open Sanbs,.
  */
 export const materialTextStyles = css`
   :root {
@@ -228,6 +228,39 @@ export const materialTextStyles = css`
     text-transform: inherit;
     /* @alternate */
     text-transform: var(--mdc-typography-headline6-text-transform, inherit);
+  }
+
+  .subtitle {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-family: Roboto, sans-serif;
+    /* @alternate */
+    font-family: var(
+      --mdc-typography-subtitle1-font-family,
+      var(--mdc-typography-font-family, Roboto, sans-serif)
+    );
+    font-size: 1rem;
+    /* @alternate */
+    font-size: var(--mdc-typography-subtitle1-font-size, 1rem);
+    line-height: 1.75rem;
+    /* @alternate */
+    line-height: var(--mdc-typography-subtitle1-line-height, 1.75rem);
+    font-weight: 400;
+    /* @alternate */
+    font-weight: var(--mdc-typography-subtitle1-font-weight, 400);
+    letter-spacing: 0.009375em;
+    /* @alternate */
+    letter-spacing: var(--mdc-typography-subtitle1-letter-spacing, 0.009375em);
+    text-decoration: inherit;
+    /* @alternate */
+    -webkit-text-decoration: var(
+      --mdc-typography-subtitle1-text-decoration,
+      inherit
+    );
+    text-decoration: var(--mdc-typography-subtitle1-text-decoration, inherit);
+    text-transform: inherit;
+    /* @alternate */
+    text-transform: var(--mdc-typography-subtitle1-text-transform, inherit);
   }
 
   p {
