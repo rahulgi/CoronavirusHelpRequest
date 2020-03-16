@@ -27,7 +27,7 @@
       ]
     },
     {
-      "collectionId": "help_request",
+      "collectionId": "help_requests",
       "fields": [
         {
           "fieldPath": "geocache",
