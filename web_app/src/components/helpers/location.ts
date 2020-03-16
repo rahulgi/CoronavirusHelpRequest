@@ -19,7 +19,7 @@ export async function getCurrentLocation(): Promise<Location> {
       );
     } else {
       // Browser doesn't support Geolocation
-      reject("Geolocation not support.");
+      reject("Geolocation not supported.");
     }
   });
 }

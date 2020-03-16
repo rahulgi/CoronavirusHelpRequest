@@ -2,16 +2,49 @@ import { useState, useCallback } from "react";
 import { useAsyncEffect } from "./useAsyncEffect";
 import { Location, getCurrentLocation } from "../components/helpers/location";
 
-export function useLocation(): Location {
-  const [location, setLocation] = useState<Location>({
-    lng: -122.42905,
-    lat: 37.77986
+export enum LocationStatus {
+  LOADING = "LOADING",
+  FOUND = "FOUND",
+  UNABLE_TO_RETRIEVE = "UNABLE_TO_RETRIEVE"
+}
+
+type LocationResult =
+  | {
+      status: LocationStatus.LOADING | LocationStatus.UNABLE_TO_RETRIEVE;
+      location: undefined;
+    }
+  | {
+      status: LocationStatus.FOUND;
+      location: Location;
+    };
+
+export function useLocation(): LocationResult {
+  const [locationResult, setLocationResult] = useState<LocationResult>({
+    status: LocationStatus.LOADING,
+    location: undefined
   });
 
-  const fetchLocation = useCallback(getCurrentLocation, []);
-  const handleLocation = useCallback(setLocation, []);
+  const fetchLocation = useCallback(async (): Promise<LocationResult> => {
+    try {
+      return {
+        status: LocationStatus.FOUND,
+        location: await getCurrentLocation()
+      };
+    } catch (e) {
+      console.error(e);
+      return {
+        status: LocationStatus.UNABLE_TO_RETRIEVE,
+        location: undefined
+      };
+    }
+  }, []);
+  const handleLocation = useCallback(setLocationResult, []);
   const handleLocationError = useCallback((e: Error) => {
     console.error(e);
+    setLocationResult({
+      status: LocationStatus.UNABLE_TO_RETRIEVE,
+      location: undefined
+    });
   }, []);
 
   useAsyncEffect({
@@ -20,5 +53,5 @@ export function useLocation(): Location {
     handleError: handleLocationError
   });
 
-  return location;
+  return locationResult;
 }

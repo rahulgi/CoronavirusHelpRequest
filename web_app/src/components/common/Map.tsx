@@ -1,20 +1,38 @@
 import React, { useEffect, useRef, useState } from "react";
 import makeAsyncScriptLoader from "react-async-script";
 import styled from "@emotion/styled/macro";
-import { useLocation } from "../../hooks/useLocation";
+import { useLocation, LocationStatus } from "../../hooks/useLocation";
 import { Form } from "./Form";
 import { Location } from "../helpers/location";
+import { spacing } from "../helpers/styles";
 
 const MapContainer = styled.div`
   width: 100%;
   height: 300px;
 `;
 
+const LocationInputLine = styled.div`
+  display: flex;
+  & > *:not(:last-child) {
+    margin-right: ${spacing.s};
+  }
+`;
+
+const SearchBoxComponent = styled.input`
+  flex-grow: 1;
+`;
+
+const SAN_FRANCISCO = {
+  lng: -122.42905,
+  lat: 37.77986
+};
 const MAP_CONTAINER_ID = "map-container";
 let map: google.maps.Map | undefined = undefined;
 let mapMarker: google.maps.Marker | undefined = undefined;
 let mapCircle: google.maps.Circle | undefined = undefined;
 let searchBox: google.maps.places.SearchBox | undefined = undefined;
+let geocoder: google.maps.Geocoder | undefined = undefined;
+let infowindow: google.maps.InfoWindow | undefined = undefined;
 const ONE_KILOMETER = 1000; // 1000 meters
 
 const AsyncMap: React.FC<{ google: undefined | typeof window.google }> = ({
@@ -23,8 +41,10 @@ const AsyncMap: React.FC<{ google: undefined | typeof window.google }> = ({
   const mapsRef = useRef<HTMLDivElement>();
   const searchBoxRef = useRef<HTMLInputElement>();
   const userLocation = useLocation();
-  const [mapLocation, setMapLocation] = useState<Location>(userLocation);
-  const [inputLocation, setInputLocation] = useState("");
+  const [mapLocation, setMapLocation] = useState<Location>(SAN_FRANCISCO);
+  const [inputLocation, setInputLocation] = useState(
+    "San Francisco, California, USA"
+  );
 
   useEffect(() => {
     if (google && google.maps && mapsRef.current) {
@@ -44,6 +64,7 @@ const AsyncMap: React.FC<{ google: undefined | typeof window.google }> = ({
         disableDoubleClickZoom: true,
         streetViewControl: false
       });
+      geocoder = new google.maps.Geocoder();
 
       mapMarker = new google.maps.Marker({
         position: mapLocation,
@@ -63,6 +84,20 @@ const AsyncMap: React.FC<{ google: undefined | typeof window.google }> = ({
 
       const clickListener = map.addListener("click", function(e) {
         setMapLocation({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+
+        // if (geocoder) {
+        //   geocoder.geocode({ location: mapLocation }, function(
+        //     results,
+        //     status
+        //   ) {
+        //     if (status === "OK" && results[0]) {
+        //       setInputLocation(results[0].formatted_address);
+        //     } else {
+        //       // TODO should it say something?
+        //       setInputLocation("");
+        //     }
+        //   });
+        // }
       });
 
       // Bias the SearchBox results towards current map's viewport.
@@ -96,7 +131,8 @@ const AsyncMap: React.FC<{ google: undefined | typeof window.google }> = ({
 
             const place = places[0];
             const { geometry } = place;
-            setInputLocation(place.formatted_address || place.name);
+            const locationName = place.formatted_address || place.name;
+            setInputLocation(locationName);
 
             if (!geometry) {
               return;
@@ -131,37 +167,67 @@ const AsyncMap: React.FC<{ google: undefined | typeof window.google }> = ({
   }, [google, searchBoxRef]);
 
   useEffect(() => {
-    setMapLocation(userLocation);
-  }, [userLocation]);
-
-  useEffect(() => {
     mapMarker && mapMarker.setPosition(mapLocation);
     mapCircle && mapCircle.setCenter(mapLocation);
     map && map.panTo(mapLocation);
+    if (geocoder) {
+      geocoder.geocode({ location: mapLocation }, function(results, status) {
+        if (status === "OK" && results[0]) {
+          setInputLocation(results[0].formatted_address);
+        } else {
+          setInputLocation(
+            `Coordinates (latitude: ${mapLocation.lat}, longitude: ${mapLocation.lng})`
+          );
+        }
+      });
+    }
   }, [mapLocation]);
-
-  async function onSubmitLocation(e: React.FormEvent) {
-    e.preventDefault();
-  }
 
   return (
     <div>
       <Form onSubmit={e => e.preventDefault()}>
         <div>
           <label htmlFor="location">Where are you?</label>
-          <input
-            type="text"
-            name="location"
-            value={inputLocation}
-            onChange={e => setInputLocation(e.target.value)}
-            placeholder="Enter location (or select on map)"
-            ref={r => r && (searchBoxRef.current = r)}
+          <p>
+            Select the general location that you're looking for help in. This is
+            just to help find people who can help near you, so it doesn't need
+            to be your exact address. You can tell your helper your address
+            later if need be.
+          </p>
+          <LocationInputLine>
+            <SearchBoxComponent
+              type="text"
+              name="location"
+              value={inputLocation}
+              onChange={e => setInputLocation(e.target.value)}
+              placeholder="Enter location..."
+              ref={r => r && (searchBoxRef.current = r)}
+            />
+          </LocationInputLine>
+        </div>
+        <div>or</div>
+        <div>
+          <LocationInputLine>
+            <button
+              type="button"
+              onClick={() => {
+                userLocation.status === LocationStatus.FOUND &&
+                  setMapLocation(userLocation.location);
+              }}
+              disabled={userLocation.status !== LocationStatus.FOUND}
+            >
+              <i className="material-icons">my_location</i>Use your location
+            </button>
+          </LocationInputLine>
+        </div>
+        <div>or</div>
+        <div>
+          <label>Select location on map</label>
+          <MapContainer
+            id={MAP_CONTAINER_ID}
+            ref={r => r && (mapsRef.current = r)}
           />
         </div>
-        <MapContainer
-          id={MAP_CONTAINER_ID}
-          ref={r => r && (mapsRef.current = r)}
-        />
       </Form>
     </div>
   );
