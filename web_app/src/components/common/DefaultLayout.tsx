@@ -29,15 +29,15 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
   return (
     <div className="app">
       <div>
-        <h1>Covid19 Help Request</h1>
+        <h3>Covid19 Help Requests</h3>
         <NavBar>
-          <Link to="/">Browse help requests</Link>
+          <Link to="/">Browse requests</Link>
           <Link to="/requestHelp">Request help</Link>
           {isLoggedIn && <Link to="/messages">Messages</Link>}
         </NavBar>
       </div>
       <div>
-        <h2>{pageTitle}</h2>
+        <h4>{pageTitle}</h4>
         {children}
       </div>
       <Footer>
