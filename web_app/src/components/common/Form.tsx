@@ -1,6 +1,6 @@
 import styled from "@emotion/styled/macro";
 
-import { spacing } from "../helpers/styles";
+import { spacing } from "../../styles/spacing";
 
 export const Form = styled.form`
   display: flex;

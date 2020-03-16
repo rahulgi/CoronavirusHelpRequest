@@ -10,40 +10,47 @@ import { MakeRequestPage } from "./components/pages/MakeRequest";
 import { HelpRequestPage } from "./components/pages/HelpRequest";
 import { MessageThreadsPage } from "./components/pages/MessageThreads";
 import { MessageThreadPage } from "./components/pages/MessageThread";
+import { injectGlobalStyles } from "./styles";
 
-function App() {
-  return (
-    <AuthProvider>
-      <Router>
-        <Switch>
-          <Route path="/" exact>
-            <BrowsePage />
-          </Route>
+class App extends React.Component {
+  public componentDidMount() {
+    injectGlobalStyles();
+  }
 
-          <Route path="/requestHelp" exact>
-            <MakeRequestPage />
-          </Route>
-          <Route path="/request/:id" component={HelpRequestPage} exact />
-          <Route
-            path="/request/:id/messages"
-            component={MessageThreadPage}
-            exact
-          />
+  public render() {
+    return (
+      <AuthProvider>
+        <Router>
+          <Switch>
+            <Route path="/" exact>
+              <BrowsePage />
+            </Route>
 
-          <Route path="/messages" exact>
-            <MessageThreadsPage />
-          </Route>
+            <Route path="/requestHelp" exact>
+              <MakeRequestPage />
+            </Route>
+            <Route path="/request/:id" component={HelpRequestPage} exact />
+            <Route
+              path="/request/:id/messages"
+              component={MessageThreadPage}
+              exact
+            />
 
-          <Route path="/login" exact>
-            <LoginPage />
-          </Route>
-          <Route path="/logout" exact>
-            <LogoutPage />
-          </Route>
-        </Switch>
-      </Router>
-    </AuthProvider>
-  );
+            <Route path="/messages" exact>
+              <MessageThreadsPage />
+            </Route>
+
+            <Route path="/login" exact>
+              <LoginPage />
+            </Route>
+            <Route path="/logout" exact>
+              <LogoutPage />
+            </Route>
+          </Switch>
+        </Router>
+      </AuthProvider>
+    );
+  }
 }
 
 export default App;

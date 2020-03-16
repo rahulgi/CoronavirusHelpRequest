@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled/macro";
 
-import { spacing } from "../helpers/styles";
+import { spacing } from "../../styles/spacing";
 import { Link } from "react-router-dom";
 import { useAuthStatus, AuthStatus } from "../contexts/AuthContext";
 

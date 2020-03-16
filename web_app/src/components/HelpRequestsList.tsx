@@ -10,7 +10,7 @@ import { useHelpRequests } from "../hooks/data/useHelpRequests";
 import { FetchResultStatus } from "../hooks/data";
 import { Loading } from "./common/Loading";
 import { Error } from "./common/Error";
-import { spacing } from "./helpers/styles";
+import { spacing } from "../styles/spacing";
 import { Button, ButtonType } from "./common/Button";
 
 const DEFAULT_DISTANCE = 10; // km

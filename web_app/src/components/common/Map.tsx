@@ -4,7 +4,7 @@ import styled from "@emotion/styled/macro";
 import { useLocation, LocationStatus } from "../../hooks/useLocation";
 import { Form } from "./Form";
 import { Location } from "../helpers/location";
-import { spacing } from "../helpers/styles";
+import { spacing } from "../../styles/spacing";
 
 const MapContainer = styled.div`
   width: 100%;

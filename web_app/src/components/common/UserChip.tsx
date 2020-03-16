@@ -4,7 +4,7 @@ import { useUser } from "../../hooks/data/useUser";
 import { Avatar } from "./Avatar";
 import { FetchResultStatus } from "../../hooks/data";
 import { getDisplayNameOrDefault } from "../../hooks/data/useUser";
-import { spacing } from "../helpers/styles";
+import { spacing } from "../../styles/spacing";
 
 const Chip = styled.div`
   display: inline-flex;
