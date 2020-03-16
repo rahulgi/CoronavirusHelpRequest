@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled/macro";
 
 import { DefaultLayout } from "../common/DefaultLayout";
@@ -7,6 +7,7 @@ import { spacing } from "../helpers/styles";
 import { useAuthStatus, AuthStatus } from "../contexts/AuthContext";
 import { createHelpRequest } from "../../firebase/storage/helpRequest";
 import { CreateResultStatus } from "../../firebase/storage";
+import { Map } from "../common/Map";
 
 const Form = styled.form`
   display: flex;
@@ -52,6 +53,7 @@ export const MakeRequestPage: React.FC = () => {
 
   return (
     <DefaultLayout pageTitle="Request help">
+      <Map />
       <Form onSubmit={submitRequest}>
         <div>
           <label htmlFor="title">Title</label>
