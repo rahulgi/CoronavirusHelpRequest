@@ -1,4 +1,6 @@
 import * as firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
 import "firebase/analytics";
 
 let initialized = false;
@@ -18,7 +20,6 @@ const FIREBASE_CONFIG = {
 export function initFirebase() {
   if (!initialized) {
     firebase.initializeApp(FIREBASE_CONFIG);
-    firebase.analytics();
     initialized = true;
   }
 }
