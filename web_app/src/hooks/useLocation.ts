@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useAsyncEffect } from "./useAsyncEffect";
 
-interface Location {
+export interface Location {
   lat: number;
   lng: number;
 }
@@ -29,8 +29,8 @@ async function getLocation(): Promise<Location> {
 
 export function useLocation(): Location {
   const [location, setLocation] = useState<Location>({
-    lat: -122.42905,
-    lng: 37.77986
+    lng: -122.42905,
+    lat: 37.77986
   });
 
   const fetchLocation = useCallback(getLocation, []);
