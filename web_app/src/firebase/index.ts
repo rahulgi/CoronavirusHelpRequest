@@ -18,6 +18,7 @@ const FIREBASE_CONFIG = {
 export function initFirebase() {
   if (!initialized) {
     firebase.initializeApp(FIREBASE_CONFIG);
+    firebase.analytics();
     initialized = true;
   }
 }

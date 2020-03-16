@@ -30,7 +30,7 @@
       "collectionId": "help_requests",
       "fields": [
         {
-          "fieldPath": "geocache",
+          "fieldPath": "geohash",
           "mode": "DESCENDING"
         },
         {

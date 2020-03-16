@@ -15,7 +15,7 @@ import { FetchResultStatus } from "../hooks/data";
 import { Loading } from "./common/Loading";
 import { Error } from "./common/Error";
 
-const DEFAULT_DISTANCE = 5; // km
+const DEFAULT_DISTANCE = 1000; // km
 
 export const HelpRequestsList: React.FC = () => {
   const [location, setLocation] = useState<Location>(DEFAULT_LOCATION);
