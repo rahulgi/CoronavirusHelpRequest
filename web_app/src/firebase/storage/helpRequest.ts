@@ -10,6 +10,7 @@ import {
   UpdateResultStatus
 } from ".";
 import { getAuth } from "../auth";
+import { Location } from "../../components/helpers/location";
 
 export enum HelpRequestStatus {
   ACTIVE = "ACTIVE",
@@ -45,6 +46,7 @@ export interface HelpRequest {
   title: string;
   body: string;
   status: HelpRequestStatus;
+  location: Location;
 }
 
 /**
@@ -60,7 +62,8 @@ function mapQueryDocToHelpRequest(
     creator_id,
     title,
     body,
-    status
+    status,
+    location
   } = doc.data() as HelpRequestDocument;
   return {
     id,
@@ -69,13 +72,15 @@ function mapQueryDocToHelpRequest(
     creatorId: creator_id,
     title,
     body,
-    status
+    status,
+    location: { lat: location.latitude, lng: location.longitude }
   };
 }
 
 export async function createHelpRequest({
   title,
-  body
+  body,
+  location
 }: Omit<
   HelpRequest,
   "id" | "createdAt" | "updatedAt" | "status" | "creatorId"
@@ -97,7 +102,7 @@ export async function createHelpRequest({
     title,
     body,
     status: HelpRequestStatus.ACTIVE,
-    location: new firebase.firestore.GeoPoint(0, 0)
+    location: new firebase.firestore.GeoPoint(location.lat, location.lng)
   };
 
   return {

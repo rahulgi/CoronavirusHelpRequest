@@ -7,6 +7,12 @@ import { createHelpRequest } from "../../firebase/storage/helpRequest";
 import { CreateResultStatus } from "../../firebase/storage";
 import { Map } from "../common/Map";
 import { Form } from "../common/Form";
+import { Location } from "../helpers/location";
+
+const SAN_FRANCISCO: Location = {
+  lng: -122.42905,
+  lat: 37.77986
+};
 
 export const MakeRequestPage: React.FC = () => {
   const history = useHistory();
@@ -18,12 +24,14 @@ export const MakeRequestPage: React.FC = () => {
   const [body, setBody] = useState("");
   const [bodyError, setBodyError] = useState<string | undefined>();
 
+  const [location, setLocation] = useState<Location>(SAN_FRANCISCO);
+
   const [submissionError, setSubmissionError] = useState<string | undefined>();
 
   async function submitRequest(e: React.FormEvent) {
     e.preventDefault();
     // TODO validate, show errors
-    const createResult = await createHelpRequest({ title, body });
+    const createResult = await createHelpRequest({ title, body, location });
 
     if (createResult.status === CreateResultStatus.CREATED) {
       history.push(`/request/${createResult.result.id}`);
@@ -36,7 +44,11 @@ export const MakeRequestPage: React.FC = () => {
 
   return (
     <DefaultLayout pageTitle="Request help">
-      <Map />
+      <Map
+        startingLocation={location}
+        startingLocationName="San Francisco, California, USA"
+        onLocationChanged={setLocation}
+      />
       <Form onSubmit={submitRequest}>
         <div>
           <label htmlFor="title">What do you need help with?</label>

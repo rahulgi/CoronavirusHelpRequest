@@ -22,29 +22,30 @@ const SearchBoxComponent = styled.input`
   flex-grow: 1;
 `;
 
-const SAN_FRANCISCO = {
-  lng: -122.42905,
-  lat: 37.77986
-};
 const MAP_CONTAINER_ID = "map-container";
 let map: google.maps.Map | undefined = undefined;
 let mapMarker: google.maps.Marker | undefined = undefined;
 let mapCircle: google.maps.Circle | undefined = undefined;
 let searchBox: google.maps.places.SearchBox | undefined = undefined;
 let geocoder: google.maps.Geocoder | undefined = undefined;
-let infowindow: google.maps.InfoWindow | undefined = undefined;
 const ONE_KILOMETER = 1000; // 1000 meters
 
-const AsyncMap: React.FC<{ google: undefined | typeof window.google }> = ({
-  google
+const AsyncMap: React.FC<{
+  google: undefined | typeof window.google;
+  startingLocation: Location;
+  startingLocationName: string;
+  onLocationChanged: (location: Location) => void;
+}> = ({
+  google,
+  startingLocation,
+  startingLocationName,
+  onLocationChanged
 }) => {
   const mapsRef = useRef<HTMLDivElement>();
   const searchBoxRef = useRef<HTMLInputElement>();
   const userLocation = useLocation();
-  const [mapLocation, setMapLocation] = useState<Location>(SAN_FRANCISCO);
-  const [inputLocation, setInputLocation] = useState(
-    "San Francisco, California, USA"
-  );
+  const [mapLocation, setMapLocation] = useState<Location>(startingLocation);
+  const [inputLocation, setInputLocation] = useState(startingLocationName);
 
   useEffect(() => {
     if (google && google.maps && mapsRef.current) {
@@ -84,20 +85,6 @@ const AsyncMap: React.FC<{ google: undefined | typeof window.google }> = ({
 
       const clickListener = map.addListener("click", function(e) {
         setMapLocation({ lat: e.latLng.lat(), lng: e.latLng.lng() });
-
-        // if (geocoder) {
-        //   geocoder.geocode({ location: mapLocation }, function(
-        //     results,
-        //     status
-        //   ) {
-        //     if (status === "OK" && results[0]) {
-        //       setInputLocation(results[0].formatted_address);
-        //     } else {
-        //       // TODO should it say something?
-        //       setInputLocation("");
-        //     }
-        //   });
-        // }
       });
 
       // Bias the SearchBox results towards current map's viewport.
@@ -167,6 +154,7 @@ const AsyncMap: React.FC<{ google: undefined | typeof window.google }> = ({
   }, [google, searchBoxRef]);
 
   useEffect(() => {
+    onLocationChanged(mapLocation);
     mapMarker && mapMarker.setPosition(mapLocation);
     mapCircle && mapCircle.setCenter(mapLocation);
     map && map.panTo(mapLocation);
