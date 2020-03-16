@@ -1,29 +1,12 @@
 import React, { useState, useEffect } from "react";
-import styled from "@emotion/styled/macro";
 
 import { DefaultLayout } from "../common/DefaultLayout";
 import { useHistory, Redirect } from "react-router-dom";
-import { spacing } from "../helpers/styles";
 import { useAuthStatus, AuthStatus } from "../contexts/AuthContext";
 import { createHelpRequest } from "../../firebase/storage/helpRequest";
 import { CreateResultStatus } from "../../firebase/storage";
 import { Map } from "../common/Map";
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  max-width: 600px;
-
-  & div {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-
-  & > *:not(:last-child) {
-    margin-bottom: ${spacing.m};
-  }
-`;
+import { Form } from "../common/Form";
 
 export const MakeRequestPage: React.FC = () => {
   const history = useHistory();
@@ -56,21 +39,23 @@ export const MakeRequestPage: React.FC = () => {
       <Map />
       <Form onSubmit={submitRequest}>
         <div>
-          <label htmlFor="title">Title</label>
+          <label htmlFor="title">What do you need help with?</label>
           <input
             type="text"
             name="title"
             onChange={e => setTitle(e.target.value)}
             value={title}
+            placeholder="Enter a short title"
           />
         </div>
 
         <div>
-          <label htmlFor="body">Post</label>
+          <label htmlFor="body">Any more information?</label>
           <textarea
             name="body"
             onChange={e => setBody(e.target.value)}
             value={body}
+            placeholder="Enter any more relevant details about your request"
           />
         </div>
 

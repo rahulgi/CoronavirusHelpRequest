@@ -1,31 +1,6 @@
 import { useState, useCallback } from "react";
 import { useAsyncEffect } from "./useAsyncEffect";
-
-export interface Location {
-  lat: number;
-  lng: number;
-}
-
-async function getLocation(): Promise<Location> {
-  return new Promise((resolve, reject) => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        function(position) {
-          resolve({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
-        },
-        function() {
-          reject("Location permissions denied.");
-        }
-      );
-    } else {
-      // Browser doesn't support Geolocation
-      reject("Geolocation not support.");
-    }
-  });
-}
+import { Location, getCurrentLocation } from "../components/helpers/location";
 
 export function useLocation(): Location {
   const [location, setLocation] = useState<Location>({
@@ -33,7 +8,7 @@ export function useLocation(): Location {
     lat: 37.77986
   });
 
-  const fetchLocation = useCallback(getLocation, []);
+  const fetchLocation = useCallback(getCurrentLocation, []);
   const handleLocation = useCallback(setLocation, []);
   const handleLocationError = useCallback((e: Error) => {
     console.error(e);

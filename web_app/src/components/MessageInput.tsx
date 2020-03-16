@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import styled from "@emotion/styled/macro";
 
-import { spacing } from "./helpers/styles";
 import {
   createMessage,
   createThread,
@@ -13,22 +11,7 @@ import { HelpRequestResult } from "../hooks/data/useHelpRequest";
 import { FetchResultStatus } from "../hooks/data";
 import { CreateResultStatus, CreateResult } from "../firebase/storage";
 import { Error } from "./common/Error";
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  max-width: 600px;
-
-  & div {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-
-  & > *:not(:last-child) {
-    margin-bottom: ${spacing.m};
-  }
-`;
+import { Form } from "./common/Form";
 
 interface MessageInputProps {
   helpRequestResult: HelpRequestResult;
