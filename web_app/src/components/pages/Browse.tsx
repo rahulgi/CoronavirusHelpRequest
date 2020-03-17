@@ -25,14 +25,18 @@ const FilterRow = styled.div`
   }
 `;
 
+const QueryInfo = styled.p`
+  margin-top: 0;
+`;
+
 const DEFAULT_DISTANCE = 10; // km
 
 export const BrowsePage: React.FC = () => {
   const [location, setLocation] = useState<Location>(DEFAULT_LOCATION);
+  const [locationName, setLocationName] = useState(DEFAULT_LOCATION_NAME);
   const [locationFilter, setLocationFilter] = useState<Location | undefined>(
     location
   );
-  const userLocationResult = useLocation();
 
   const filter = useMemo(
     (): HelpRequestFilters => ({
@@ -63,6 +67,7 @@ export const BrowsePage: React.FC = () => {
               setLocation(location);
               setLocationFilter(location);
             }}
+            onLocationNameChanged={setLocationName}
             startingLocation={DEFAULT_LOCATION}
             startingLocationName={DEFAULT_LOCATION_NAME}
             locationColor={PALETTE.primary}
@@ -90,6 +95,17 @@ export const BrowsePage: React.FC = () => {
           All requests
         </Button>
       </FilterRow>
+      <QueryInfo>
+        {filter.locationFilter ? (
+          <span>
+            Showing Help Requests within <b>10km</b> of <b>{locationName}</b>.
+          </span>
+        ) : (
+          <span>
+            Showing <b>all</b> Help Requests.
+          </span>
+        )}
+      </QueryInfo>
       <HelpRequestsList helpRequestsResult={helpRequestsResult} />
     </DefaultLayout>
   );
