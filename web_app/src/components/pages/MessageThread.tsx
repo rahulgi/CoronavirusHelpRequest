@@ -46,6 +46,11 @@ export const MessageThreadPage: React.FC<RouteComponentProps<{
           <Error>{helpRequestResult.error}</Error>
         )}
       </div>
+      <MessageInput
+        helpRequestResult={helpRequestResult}
+        threadResult={threadResult}
+        triggerThreadRefresh={() => setDidCreateThread(true)}
+      />
       {messagesResult.status === FetchResultStatus.FOUND && (
         <List>
           {messagesResult.result.map(message => (
@@ -59,11 +64,6 @@ export const MessageThreadPage: React.FC<RouteComponentProps<{
       {messagesResult.status === FetchResultStatus.ERROR && (
         <Error>{messagesResult.error}</Error>
       )}
-      <MessageInput
-        helpRequestResult={helpRequestResult}
-        threadResult={threadResult}
-        triggerThreadRefresh={() => setDidCreateThread(true)}
-      />
     </DefaultLayout>
   );
 };

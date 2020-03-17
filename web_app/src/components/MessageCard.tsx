@@ -11,10 +11,20 @@ import {
   CardBody
 } from "./common/Material/Card";
 import { useCurrentUserId } from "./contexts/AuthContext";
+import { PALETTE } from "../styles/colors";
 
 const StyledCard = styled(Card)<{ isOwnMessage: boolean }>`
   max-width: 70%;
-  ${({ isOwnMessage }) => isOwnMessage && "margin-left: auto"}
+  ${({ isOwnMessage }) => isOwnMessage && "margin-left: auto"};
+  background-color: ${({ isOwnMessage }) =>
+    isOwnMessage ? PALETTE.secondary : PALETTE.darkGray};
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 `;
 
 interface MessageCardProps {
@@ -28,10 +38,10 @@ export const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
   return (
     <StyledCard isOwnMessage={isOwnMessage}>
       <CardBody>
-        <CardOverline>
+        <Header>
           <UserChip userId={creatorId} />
-        </CardOverline>
-        <CardSubtitle>{createdAt.toLocaleString()}</CardSubtitle>
+          <CardSubtitle>{createdAt.toLocaleString()}</CardSubtitle>
+        </Header>
         <CardBodyText>{messageText}</CardBodyText>
       </CardBody>
     </StyledCard>

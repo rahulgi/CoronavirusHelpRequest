@@ -157,7 +157,7 @@ export function listenForMessages({
   return getFirestore()
     .collection(Collections.Messages)
     .where("thread_id", "==", threadId)
-    .orderBy("created_at", "asc")
+    .orderBy("created_at", "desc")
     .onSnapshot(
       snapshot => setMessages(snapshot.docs.map(mapQueryDocToMessage)),
       error => setMessagesError(error)

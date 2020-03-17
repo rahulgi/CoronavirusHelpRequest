@@ -6,9 +6,9 @@ import { PALETTE } from "../../styles/colors";
 import { spacing } from "../../styles/spacing";
 
 const StatusToColorMapping: { [key in HelpRequestStatus]: string } = {
-  [HelpRequestStatus.ACTIVE]: PALETTE.red,
-  [HelpRequestStatus.CLAIMED]: PALETTE.blue,
-  [HelpRequestStatus.RESOLVED]: PALETTE.green
+  [HelpRequestStatus.ACTIVE]: PALETTE.error,
+  [HelpRequestStatus.CLAIMED]: PALETTE.secondary,
+  [HelpRequestStatus.RESOLVED]: PALETTE.onPrimary
 };
 
 const Chip = styled.div<{ status: HelpRequestStatus }>`

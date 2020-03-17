@@ -121,10 +121,10 @@ const AsyncMap: React.FC<{
         helpRequestCircles.map(circle => circle.setMap(null));
       helpRequestCircles = helpRequestsResult.result.map(result => {
         return new google.maps.Circle({
-          strokeColor: PALETTE.red,
+          strokeColor: PALETTE.error,
           strokeOpacity: 0.8,
           strokeWeight: 2,
-          fillColor: PALETTE.red,
+          fillColor: PALETTE.error,
           fillOpacity: 0.35,
           map: map,
           center: result.location,

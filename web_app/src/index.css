@@ -5,10 +5,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #fafafa;
 }
 
 body > #root {
-  width: 100%;
+  width: calc(100vw - 16px);
+  margin: 0 8px;
   display: flex;
   flex-direction: column;
   align-items: center;

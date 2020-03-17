@@ -31,7 +31,7 @@ export const UserChip: React.FC<{ userId: string }> = ({ userId }) => {
             : undefined
         }
       />
-      <span>
+      <span className="mdc-typography mdc-typography--overline">
         {getDisplayNameOrDefault(userResult)} {isSelf && "(You)"}
       </span>
     </Chip>

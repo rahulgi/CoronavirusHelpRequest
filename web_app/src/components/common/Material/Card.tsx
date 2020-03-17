@@ -28,9 +28,14 @@ export const CardBody: React.FC = ({ children }) => {
   return <StyledBody>{children}</StyledBody>;
 };
 
-export const CardOverline: React.FC = ({ children }) => {
+export const CardOverline: React.FC<React.HTMLProps<HTMLDivElement>> = ({
+  children,
+  className
+}) => {
   return (
-    <div className="mdc-typography mdc-typography--overline">{children}</div>
+    <div className={`mdc-typography mdc-typography--overline ${className}`}>
+      {children}
+    </div>
   );
 };
 

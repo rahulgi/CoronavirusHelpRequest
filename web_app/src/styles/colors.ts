@@ -1,7 +1,16 @@
+/**
+ * Adapted from https://material-theme-builder.glitch.me/
+ */
 export const PALETTE = {
-  red: "red",
-  blue: "blue",
-  green: "green",
-  lightGray: "#f8f8f8",
-  darkGray: "#c8c8c8"
+  primary: "#6200ee",
+  onPrimary: "#ffffff",
+  secondary: "#03dac6",
+  onSecondary: "#000000",
+  error: "#b00020",
+  onError: "#fafafa",
+  surface: "#fafafa",
+  onSurface: "#000000",
+  background: "#fafafa",
+  lightGray: "#ffffff",
+  darkGray: "#c7c7c7"
 };

@@ -61,7 +61,7 @@ export const BrowsePage: React.FC = () => {
         }}
         startingLocation={DEFAULT_LOCATION}
         startingLocationName={DEFAULT_LOCATION_NAME}
-        locationColor={PALETTE.blue}
+        locationColor={PALETTE.primary}
         helpRequestsResult={helpRequestsResult}
       />
       <FilterRow>
