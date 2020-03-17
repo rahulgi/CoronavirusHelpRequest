@@ -2,8 +2,16 @@ import React from "react";
 import styled from "@emotion/styled/macro";
 import { spacing } from "../../../styles/spacing";
 
-export const Card: React.FC = ({ children }) => {
-  return <div className="mdc-card">{children}</div>;
+export const Card: React.FC<React.HTMLProps<HTMLDivElement>> = ({
+  children,
+  className,
+  ...rest
+}) => {
+  return (
+    <div className={`mdc-card ${className}`} {...rest}>
+      {children}
+    </div>
+  );
 };
 
 const StyledBody = styled.div`

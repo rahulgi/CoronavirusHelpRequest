@@ -13,6 +13,7 @@ import { Loading } from "../common/Loading";
 import { NotFound } from "../common/NotFound";
 import { useThread } from "../../hooks/data/useThread";
 import { useMessages } from "../../hooks/data/useMessages";
+import { useCurrentUserId } from "../contexts/AuthContext";
 
 export const MessageThreadPage: React.FC<RouteComponentProps<{
   id: string;
@@ -23,7 +24,6 @@ export const MessageThreadPage: React.FC<RouteComponentProps<{
 
   const helpRequestResult = useHelpRequest(helpRequestId);
   const threadResult = useThread({ helpRequestId, didCreateThread });
-  console.log("threadResult", threadResult);
   const messagesResult = useMessages(threadResult);
 
   if (threadResult.status === FetchResultStatus.AUTHENTICATION_REQUIRED) {
