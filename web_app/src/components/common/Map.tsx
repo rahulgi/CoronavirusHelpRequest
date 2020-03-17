@@ -10,6 +10,7 @@ import { PALETTE } from "../../styles/colors";
 import { HelpRequestsResult } from "../../hooks/data/useHelpRequests";
 import { FetchResultStatus } from "../../hooks/data";
 import { ButtonType, Button } from "./Button";
+import { HelpOffersResult } from "../../hooks/data/useHelpOffers";
 
 const MapContainer = styled.div`
   width: 100%;
@@ -32,6 +33,7 @@ let map: google.maps.Map | undefined = undefined;
 let mapMarker: google.maps.Marker | undefined = undefined;
 let mapCircle: google.maps.Circle | undefined = undefined;
 let helpRequestCircles: google.maps.Circle[] | undefined;
+let helpOfferCircles: google.maps.Circle[] | undefined;
 let searchBox: google.maps.places.SearchBox | undefined = undefined;
 let geocoder: google.maps.Geocoder | undefined = undefined;
 const ONE_KILOMETER = 1000; // 1000 meters
@@ -44,6 +46,7 @@ const AsyncMap: React.FC<{
   clickable?: boolean;
   locationRadius?: number; // km
   helpRequestsResult?: HelpRequestsResult;
+  helpOffersResult?: HelpOffersResult;
   onLocationChanged?: (location: Location) => void;
   onLocationNameChanged?: (locationName: string) => void;
 }> = ({
@@ -54,6 +57,7 @@ const AsyncMap: React.FC<{
   clickable = true,
   locationRadius = 1,
   helpRequestsResult,
+  helpOffersResult,
   onLocationChanged,
   onLocationNameChanged
 }) => {
@@ -133,6 +137,29 @@ const AsyncMap: React.FC<{
   useEffect(() => {
     mapCircle && mapCircle.setRadius(locationRadius * ONE_KILOMETER);
   }, [locationRadius]);
+
+  useEffect(() => {
+    if (
+      google &&
+      helpOffersResult &&
+      helpOffersResult.status === FetchResultStatus.FOUND
+    ) {
+      helpOfferCircles && helpOfferCircles.map(circle => circle.setMap(null));
+      helpOfferCircles = helpOffersResult.result.map(result => {
+        return new google.maps.Circle({
+          strokeColor: PALETTE.complimentary,
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: PALETTE.complimentary,
+          fillOpacity: 0.35,
+          map: map,
+          center: result.location,
+          radius: result.radius * ONE_KILOMETER,
+          clickable: false
+        });
+      });
+    }
+  }, [helpOffersResult, google]);
 
   useEffect(() => {
     if (

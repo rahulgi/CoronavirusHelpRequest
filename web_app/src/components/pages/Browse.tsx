@@ -17,6 +17,7 @@ import { PALETTE } from "../../styles/colors";
 import { Card, CardBody } from "../common/Material/Card";
 import { FetchResultStatus } from "../../hooks/data";
 import { RadiusSelector } from "../common/RadiusSelector";
+import { useHelpOffers } from "../../hooks/data/useHelpOffers";
 
 const FilterRow = styled.div`
   display: flex;
@@ -38,6 +39,10 @@ const QueryInfo = styled.p`
   margin: 0;
 `;
 
+const HelpRequest = styled.span`
+  color: ${PALETTE.error};
+`;
+
 const DEFAULT_DISTANCE = "10"; // km
 
 export const BrowsePage: React.FC = () => {
@@ -52,6 +57,7 @@ export const BrowsePage: React.FC = () => {
   });
 
   const helpRequestsResult = useHelpRequests(filter);
+  const helpOffersResult = useHelpOffers(filter);
 
   return (
     <DefaultLayout pageTitle="Browse requests">
@@ -70,6 +76,7 @@ export const BrowsePage: React.FC = () => {
             startingLocationName={DEFAULT_LOCATION_NAME}
             locationColor={PALETTE.primary}
             helpRequestsResult={helpRequestsResult}
+            helpOffersResult={helpOffersResult}
           />
         </CardBody>
       </Card>
@@ -111,13 +118,14 @@ export const BrowsePage: React.FC = () => {
         <QueryInfo>
           {filter.locationFilter ? (
             <span>
-              Showing <b>{helpRequestsResult.result?.length}</b> Help Requests
-              within <b>{filter.locationFilter.distance}km</b> of{" "}
-              <b>{locationName}</b>.
+              Showing <b>{helpRequestsResult.result?.length}</b>{" "}
+              <HelpRequest>Help Requests</HelpRequest> within{" "}
+              <b>{filter.locationFilter.distance}km</b> of <b>{locationName}</b>
+              .
             </span>
           ) : (
             <span>
-              Showing <b>all</b> Help Requests{" "}
+              Showing <b>all</b> <HelpRequest>Help Requests</HelpRequest>{" "}
               <b>({helpRequestsResult.result?.length} total)</b>.
             </span>
           )}
