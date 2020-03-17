@@ -113,13 +113,14 @@ export const BrowsePage: React.FC = () => {
         <QueryInfo>
           {filter.locationFilter ? (
             <span>
-              Showing Help Requests within{" "}
-              <b>{filter.locationFilter.distance}km</b> of <b>{locationName}</b>
-              .
+              Showing <b>{helpRequestsResult.result?.length}</b> Help Requests
+              within <b>{filter.locationFilter.distance}km</b> of{" "}
+              <b>{locationName}</b>.
             </span>
           ) : (
             <span>
-              Showing <b>all</b> Help Requests.
+              Showing <b>all</b> Help Requests{" "}
+              <b>({helpRequestsResult.result?.length} total)</b>.
             </span>
           )}
         </QueryInfo>
