@@ -10,12 +10,10 @@ import {
   DEFAULT_LOCATION_NAME
 } from "../helpers/location";
 import { spacing } from "../../styles/spacing";
-import { useLocation } from "../../hooks/useLocation";
 import { Button, ButtonType } from "../common/Button";
 import { useHelpRequests } from "../../hooks/data/useHelpRequests";
 import { HelpRequestFilters } from "../../firebase/storage/helpRequest";
 import { PALETTE } from "../../styles/colors";
-import { HelpOfferCard } from "../HelpOfferCard";
 import { Card, CardBody } from "../common/Material/Card";
 import { FetchResultStatus } from "../../hooks/data";
 import { RadiusSelector } from "../common/RadiusSelector";
@@ -40,12 +38,12 @@ const QueryInfo = styled.p`
   margin: 0;
 `;
 
-const DEFAULT_DISTANCE = 10; // km
+const DEFAULT_DISTANCE = "10"; // km
 
 export const BrowsePage: React.FC = () => {
   const [location, setLocation] = useState<Location>(DEFAULT_LOCATION);
   const [locationName, setLocationName] = useState(DEFAULT_LOCATION_NAME);
-  const [radius, setRadius] = useState("10");
+  const [radius, setRadius] = useState(DEFAULT_DISTANCE);
   const [filter, setFilter] = useState<HelpRequestFilters>({
     locationFilter: {
       location,
@@ -79,7 +77,7 @@ export const BrowsePage: React.FC = () => {
         <FilterRow>
           <RadiusSelector
             labelText="Filter radius"
-            startingRadius="10"
+            startingRadius={DEFAULT_DISTANCE}
             onRadiusChanged={setRadius}
           />
           <Button
