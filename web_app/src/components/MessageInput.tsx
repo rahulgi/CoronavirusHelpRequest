@@ -101,7 +101,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
         autoFocus
       />
       <Button type={ButtonType.PRIMARY} disabled={disabled}>
-        Send
+        Send Message
       </Button>
       {error && <Error>{error}</Error>}
     </MessageInputForm>

@@ -4,6 +4,7 @@ import styled from "@emotion/styled/macro";
 import { spacing } from "../../styles/spacing";
 import { Link } from "react-router-dom";
 import { useAuthStatus, AuthStatus } from "../contexts/AuthContext";
+import { useLocation } from "../../hooks/useLocation";
 
 const Title = styled.h3`
   margin: ${spacing.l} 0;
@@ -37,6 +38,7 @@ const Footer = styled.div`
 
 interface DefaultLayoutProps {
   pageTitle: string;
+  subtitle?: string;
 }
 
 export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
@@ -44,13 +46,14 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
   pageTitle
 }) => {
   const isLoggedIn = useAuthStatus() === AuthStatus.LOGGED_IN;
+  const location = useLocation();
 
   return (
     <div className="app">
       <Header>
         <Title>Coronavirus Help Requests</Title>
         <NavBar>
-          <Link to="/">Browse requests</Link>
+          <Link to="/">Offer help</Link>
           <Link to="/requestHelp">Request help</Link>
           {isLoggedIn && <Link to="/messages">Messages</Link>}
         </NavBar>

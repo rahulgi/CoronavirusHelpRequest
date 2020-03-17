@@ -49,11 +49,11 @@ export const BrowsePage: React.FC = () => {
   const helpRequestsResult = useHelpRequests(filter);
 
   return (
-    <DefaultLayout pageTitle="Browse requests">
-      <p>
+    <DefaultLayout pageTitle="Offer help">
+      {/* <p>
         &ldquo;Ask not what your country can do for you — ask what you can do
         for your country.&rdquo; - John F. Kennedy
-      </p>
+      </p> */}
       <Map
         onLocationChanged={(location: Location) => {
           setLocation(location);

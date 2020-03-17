@@ -21,6 +21,7 @@ import {
   CardActions,
   CardActionButtons,
   CardBodyText,
+  CardBody,
   CardTitle,
   CardSubtitle,
   CardOverline
@@ -80,27 +81,37 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
     };
   }
 
-  const showActions = showStatusButton || showMessageButton;
+  const showActions =
+    (showStatusButton && status !== HelpRequestStatus.RESOLVED) ||
+    showMessageButton;
+
+  const bodyContent = (
+    <>
+      <CardOverline>
+        <UserChip userId={creatorId} />
+      </CardOverline>
+      <CardTitle>{title}</CardTitle>
+      <CardSubtitle>
+        <HelpRequestStatusChip status={status} />
+        {distance && (
+          <span>
+            <b>{distance.toPrecision(2)}km away</b>
+          </span>
+        )}
+        <TimeAgo date={createdAt} />
+      </CardSubtitle>
+
+      <CardBodyText>{body}</CardBodyText>
+    </>
+  );
 
   const cardContents = (
     <Card>
-      <CardPrimaryAction>
-        <CardOverline>
-          <UserChip userId={creatorId} />
-        </CardOverline>
-        <CardTitle>{title}</CardTitle>
-        <CardSubtitle>
-          <HelpRequestStatusChip status={status} />
-          {distance && (
-            <span>
-              <b>{distance.toPrecision(2)}km away</b>
-            </span>
-          )}
-          <TimeAgo date={createdAt} />
-        </CardSubtitle>
-
-        <CardBodyText>{body}</CardBodyText>
-      </CardPrimaryAction>
+      {isLink ? (
+        <CardPrimaryAction>{bodyContent}</CardPrimaryAction>
+      ) : (
+        <CardBody>{bodyContent}</CardBody>
+      )}
 
       {showActions && (
         <CardActions>
@@ -123,26 +134,16 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
               ))}
             {showStatusButton &&
               isOwnRequest &&
-              ((status === HelpRequestStatus.ACTIVE && (
+              status === HelpRequestStatus.ACTIVE && (
+                // Disabled "CLAIMED" state for now
                 <Button
                   type={ButtonType.SECONDARY}
-                  onClick={onSetStatusClickCreator(HelpRequestStatus.CLAIMED)}
+                  onClick={onSetStatusClickCreator(HelpRequestStatus.RESOLVED)}
                   disabled={updating}
                 >
-                  Mark as In Progress
+                  Mark as Resolved
                 </Button>
-              )) ||
-                (status === HelpRequestStatus.CLAIMED && (
-                  <Button
-                    type={ButtonType.SECONDARY}
-                    onClick={onSetStatusClickCreator(
-                      HelpRequestStatus.RESOLVED
-                    )}
-                    disabled={updating}
-                  >
-                    Mark as Resolved
-                  </Button>
-                )))}
+              )}
           </CardActionButtons>
         </CardActions>
       )}
