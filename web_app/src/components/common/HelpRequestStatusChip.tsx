@@ -8,7 +8,7 @@ import { spacing } from "../../styles/spacing";
 const StatusToColorMapping: { [key in HelpRequestStatus]: string } = {
   [HelpRequestStatus.ACTIVE]: PALETTE.error,
   [HelpRequestStatus.CLAIMED]: PALETTE.secondary,
-  [HelpRequestStatus.RESOLVED]: PALETTE.onPrimary
+  [HelpRequestStatus.RESOLVED]: PALETTE.complimentary
 };
 
 const Chip = styled.div<{ status: HelpRequestStatus }>`

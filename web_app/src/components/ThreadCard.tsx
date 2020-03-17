@@ -36,7 +36,7 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({
   const helpRequestResult = useHelpRequest(helpRequestId);
 
   return (
-    <StyledLink to={`request/${helpRequestId}`}>
+    <StyledLink to={`/request/${helpRequestId}/thread/${thread.id}`}>
       <Card>
         <CardPrimaryAction>
           <CardOverline>

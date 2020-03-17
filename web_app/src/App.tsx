@@ -29,6 +29,11 @@ class App extends React.Component {
               <MakeRequestPage />
             </Route>
             <Route path="/request/:id" component={HelpRequestPage} exact />
+            <Route
+              path="/request/:id/thread/:threadId"
+              component={HelpRequestPage}
+              exact
+            />
 
             <Route path="/messages" exact>
               <MessageThreadsPage />

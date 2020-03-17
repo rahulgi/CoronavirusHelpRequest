@@ -4,6 +4,7 @@
 export const PALETTE = {
   primary: "#6200ee",
   onPrimary: "#ffffff",
+  complimentary: "#09af00",
   secondary: "#03dac6",
   onSecondary: "#000000",
   error: "#b00020",

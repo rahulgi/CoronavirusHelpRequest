@@ -5,7 +5,7 @@ import { spacing } from "../../styles/spacing";
 import { Link } from "react-router-dom";
 import { useAuthStatus, AuthStatus } from "../contexts/AuthContext";
 
-const Header = styled.h3`
+const Title = styled.h3`
   margin: ${spacing.l} 0;
 `;
 
@@ -13,6 +13,16 @@ const NavBar = styled.div`
   display: flex;
   & *:not(:last-child) {
     margin-right: ${spacing.m};
+  }
+`;
+
+const Header = styled.div``;
+
+export const Contents = styled.div`
+  display: flex;
+  flex-direction: column;
+  & > *:not(:last-child) {
+    margin-bottom: ${spacing.l};
   }
 `;
 
@@ -33,18 +43,18 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
 
   return (
     <div className="app">
-      <div>
-        <Header>Coronavirus Help Requests</Header>
+      <Header>
+        <Title>Coronavirus Help Requests</Title>
         <NavBar>
           <Link to="/">Browse requests</Link>
           <Link to="/requestHelp">Request help</Link>
           {isLoggedIn && <Link to="/messages">Messages</Link>}
         </NavBar>
-      </div>
-      <div>
+      </Header>
+      <Contents>
         <h4>{pageTitle}</h4>
         {children}
-      </div>
+      </Contents>
       <Footer>
         {isLoggedIn ? (
           <Link to="/logout">Logout</Link>

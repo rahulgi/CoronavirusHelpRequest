@@ -12,11 +12,13 @@ import { useCurrentUserId } from "../contexts/AuthContext";
 import { MessageThread } from "./MessageThread";
 import { useThreads } from "../../hooks/data/useThreads";
 import { ThreadsList } from "../ThreadsList";
+import { Button, ButtonType } from "../common/Button";
 
-export const HelpRequestPage: React.FC<RouteComponentProps<{ id: string }>> = ({
-  match
-}) => {
-  const id = match.params.id;
+export const HelpRequestPage: React.FC<RouteComponentProps<{
+  id: string;
+  threadId?: string;
+}>> = ({ match, history }) => {
+  const { id, threadId } = match.params;
   const currentuserId = useCurrentUserId();
   const requestResult = useHelpRequest(id);
   const isOwnHelpRequest =
@@ -36,13 +38,28 @@ export const HelpRequestPage: React.FC<RouteComponentProps<{ id: string }>> = ({
       {requestResult.status === FetchResultStatus.ERROR && (
         <Error>{requestResult.error}</Error>
       )}
-      <h4>Messages</h4>
       {isOwnHelpRequest ? (
-        <div>
-          {threadsResult.result && (
-            <ThreadsList threads={threadsResult.result} />
-          )}
-        </div>
+        threadId ? (
+          <div>
+            <Button
+              type={ButtonType.SECONDARY}
+              onClick={e => {
+                e.preventDefault();
+                history.push(`/request/${id}`);
+              }}
+            >
+              Back to all messages
+            </Button>
+            <MessageThread helpRequestId={id} />
+          </div>
+        ) : (
+          <div>
+            <h4>Messages</h4>
+            {threadsResult.result && (
+              <ThreadsList threads={threadsResult.result} />
+            )}
+          </div>
+        )
       ) : (
         <div>
           <MessageThread helpRequestId={id} />
