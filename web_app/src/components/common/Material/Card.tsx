@@ -6,16 +6,18 @@ export const Card: React.FC = ({ children }) => {
   return <div className="mdc-card">{children}</div>;
 };
 
-const StyledPrimaryAction = styled.div`
+const StyledBody = styled.div`
   padding: ${spacing.m};
 `;
 
 export const CardPrimaryAction: React.FC = ({ children }) => {
   return (
-    <StyledPrimaryAction className="mdc-card__primary-action">
-      {children}
-    </StyledPrimaryAction>
+    <StyledBody className="mdc-card__primary-action">{children}</StyledBody>
   );
+};
+
+export const CardBody: React.FC = ({ children }) => {
+  return <StyledBody>{children}</StyledBody>;
 };
 
 export const CardOverline: React.FC = ({ children }) => {

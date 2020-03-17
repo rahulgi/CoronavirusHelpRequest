@@ -22,7 +22,7 @@
         },
         {
           "fieldPath": "created_at",
-          "mode": "DESCENDING"
+          "mode": "ASCENDING"
         }
       ]
     },
