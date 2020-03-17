@@ -24,8 +24,11 @@ export const CardPrimaryAction: React.FC = ({ children }) => {
   );
 };
 
-export const CardBody: React.FC = ({ children }) => {
-  return <StyledBody>{children}</StyledBody>;
+export const CardBody: React.FC<React.HTMLProps<HTMLDivElement>> = ({
+  children,
+  ...rest
+}) => {
+  return <StyledBody {...rest}>{children}</StyledBody>;
 };
 
 export const CardOverline: React.FC<React.HTMLProps<HTMLDivElement>> = ({

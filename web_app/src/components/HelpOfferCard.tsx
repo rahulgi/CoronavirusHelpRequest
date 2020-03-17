@@ -28,6 +28,8 @@ import {
   updateHelpOffer
 } from "../firebase/storage/helpOffer";
 import { CreateResult, UpdateResult } from "../firebase/storage";
+import { InputContainer } from "./common/InputContainer";
+import { spacing } from "../styles/spacing";
 
 const OPTIONS: Option[] = [
   { label: "1km", value: "1" },
@@ -39,6 +41,18 @@ const OPTIONS: Option[] = [
 
 const StyledSelect = styled(Select)`
   max-width: 100px;
+`;
+
+const StyledForm = styled.form`
+  & > *:not(:last-child) {
+    margin-bottom: ${spacing.m};
+  }
+`;
+
+const StyledBody = styled(CardBody)`
+  & > *:not(:last-child) {
+    margin-bottom: ${spacing.l};
+  }
 `;
 
 export const HelpOfferCard: React.FC = () => {
@@ -95,39 +109,43 @@ export const HelpOfferCard: React.FC = () => {
 
   return (
     <Card>
-      <CardBody>
+      <StyledBody>
         {helpOfferResult.status === FetchResultStatus.LOADING ? (
           <Loading />
         ) : (
           <>
-            <CardTitle>
-              {helpOffer ? "You are offering to help!" : "Create a help offer"}
-            </CardTitle>
-            <CardSubtitle>
-              By creating a help offer, you let others know that someone near
-              them is offering help. You'll also get notified when a Help
-              Request is created in the radius you select.
-            </CardSubtitle>
-            <Map
-              onLocationChanged={setSelectedLocation}
-              onLocationNameChanged={setSelectedLocationName}
-              locationRadius={radius}
-              startingLocation={startLocation}
-              startingLocationName={startLocationName}
-              locationColor={PALETTE.primary}
-            />
-            <StyledSelect
-              labelText="Offer radius"
-              value={radius}
-              options={OPTIONS}
-              onChange={option => setRadius(option.value)}
-              collapseDescriptionSpace
-            />
-            <p>
-              You are available to help within <b>{radius}km</b> of{" "}
-              <b>{selectedLocationName}</b>.
-            </p>
-            <form onSubmit={submitHelpOffer}>
+            <div>
+              <CardTitle>
+                {helpOffer
+                  ? "You are offering to help!"
+                  : "Create a help offer"}
+              </CardTitle>
+              <CardSubtitle>
+                By creating a help offer, you let others know that someone near
+                them is offering help. You'll also get notified when a Help
+                Request is created in the radius you select.
+              </CardSubtitle>
+            </div>
+            <StyledForm onSubmit={submitHelpOffer}>
+              <Map
+                onLocationChanged={setSelectedLocation}
+                onLocationNameChanged={setSelectedLocationName}
+                locationRadius={radius}
+                startingLocation={startLocation}
+                startingLocationName={startLocationName}
+                locationColor={PALETTE.primary}
+              />
+              <StyledSelect
+                labelText="Offer radius"
+                value={radius}
+                options={OPTIONS}
+                onChange={option => setRadius(option.value)}
+                collapseDescriptionSpace
+              />
+              <p>
+                You are available to help within <b>{radius}km</b> of{" "}
+                <b>{selectedLocationName}</b>.
+              </p>
               <Button type={ButtonType.PRIMARY}>
                 {submitting ? (
                   <Loading />
@@ -137,10 +155,10 @@ export const HelpOfferCard: React.FC = () => {
                   "Create help offer"
                 )}
               </Button>
-            </form>
+            </StyledForm>
           </>
         )}
-      </CardBody>
+      </StyledBody>
     </Card>
   );
 };

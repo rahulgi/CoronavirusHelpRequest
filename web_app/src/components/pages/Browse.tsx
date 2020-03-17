@@ -16,6 +16,7 @@ import { useHelpRequests } from "../../hooks/data/useHelpRequests";
 import { HelpRequestFilters } from "../../firebase/storage/helpRequest";
 import { PALETTE } from "../../styles/colors";
 import { HelpOfferCard } from "../HelpOfferCard";
+import { Card, CardBody } from "../common/Material/Card";
 
 const FilterRow = styled.div`
   display: flex;
@@ -50,21 +51,25 @@ export const BrowsePage: React.FC = () => {
   const helpRequestsResult = useHelpRequests(filter);
 
   return (
-    <DefaultLayout pageTitle="Offer help">
+    <DefaultLayout pageTitle="Browse requests">
       {/* <p>
         &ldquo;Ask not what your country can do for you — ask what you can do
         for your country.&rdquo; - John F. Kennedy
       </p> */}
-      <Map
-        onLocationChanged={(location: Location) => {
-          setLocation(location);
-          setLocationFilter(location);
-        }}
-        startingLocation={DEFAULT_LOCATION}
-        startingLocationName={DEFAULT_LOCATION_NAME}
-        locationColor={PALETTE.primary}
-        helpRequestsResult={helpRequestsResult}
-      />
+      <Card>
+        <CardBody>
+          <Map
+            onLocationChanged={(location: Location) => {
+              setLocation(location);
+              setLocationFilter(location);
+            }}
+            startingLocation={DEFAULT_LOCATION}
+            startingLocationName={DEFAULT_LOCATION_NAME}
+            locationColor={PALETTE.primary}
+            helpRequestsResult={helpRequestsResult}
+          />
+        </CardBody>
+      </Card>
       <FilterRow>
         <Button
           type={ButtonType.PRIMARY}

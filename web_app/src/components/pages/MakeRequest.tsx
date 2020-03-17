@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "@emotion/styled/macro";
 
 import { DefaultLayout } from "../common/DefaultLayout";
 import { useHistory, Redirect } from "react-router-dom";
@@ -6,7 +7,6 @@ import { useAuthStatus, AuthStatus } from "../contexts/AuthContext";
 import { createHelpRequest } from "../../firebase/storage/helpRequest";
 import { CreateResultStatus } from "../../firebase/storage";
 import { Map } from "../common/Map";
-import { Form } from "../common/Form";
 import {
   Location,
   DEFAULT_LOCATION_NAME,
@@ -14,6 +14,26 @@ import {
 } from "../helpers/location";
 import { PALETTE } from "../../styles/colors";
 import { Button, ButtonType } from "../common/Button";
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  CardSubtitle
+} from "../common/Material/Card";
+import { InputContainer } from "../common/InputContainer";
+import { spacing } from "../../styles/spacing";
+
+const StyledForm = styled.form`
+  & > *:not(:last-child) {
+    margin-bottom: ${spacing.m};
+  }
+`;
+
+const StyledBody = styled(CardBody)`
+  & > *:not(:last-child) {
+    margin-bottom: ${spacing.l};
+  }
+`;
 
 export const MakeRequestPage: React.FC = () => {
   const history = useHistory();
@@ -45,43 +65,50 @@ export const MakeRequestPage: React.FC = () => {
 
   return (
     <DefaultLayout pageTitle="Request help">
-      <p>
-        Select the location that you're looking for help in. This is just to
-        help find people who can help near you, so it doesn't need to be your
-        exact address.
-      </p>
-      <Map
-        startingLocation={location}
-        startingLocationName={DEFAULT_LOCATION_NAME}
-        onLocationChanged={setLocation}
-        locationColor={PALETTE.error}
-      />
-      <Form onSubmit={submitRequest}>
-        <div>
-          <label htmlFor="title">What do you need help with?</label>
-          <input
-            type="text"
-            name="title"
-            onChange={e => setTitle(e.target.value)}
-            value={title}
-            placeholder="I need someone to pick up my prescriptions for me."
-          />
-        </div>
-
-        <div>
-          <label htmlFor="body">Any more information?</label>
-          <textarea
-            name="body"
-            onChange={e => setBody(e.target.value)}
-            value={body}
-            placeholder="My pharmacy is the Walgreens at 8th Ave and Mission St."
-          />
-        </div>
-
-        <div>
-          <Button type={ButtonType.PRIMARY}>Make request</Button>
-        </div>
-      </Form>
+      <Card>
+        <StyledBody>
+          <div>
+            <CardTitle>Create a Help Request</CardTitle>
+            <CardSubtitle>
+              A help request lets people know roughly where and what kind of
+              help you need. Once someone responds to your help request you can
+              message them further details.
+            </CardSubtitle>
+          </div>
+          <StyledForm onSubmit={submitRequest}>
+            <Map
+              startingLocation={location}
+              startingLocationName={DEFAULT_LOCATION_NAME}
+              onLocationChanged={setLocation}
+              locationColor={PALETTE.error}
+            />
+            <InputContainer
+              labelText="What do you need help with?"
+              collapseDescriptionSpace
+            >
+              <input
+                type="text"
+                name="title"
+                onChange={e => setTitle(e.target.value)}
+                value={title}
+                placeholder="I need someone to pick up my prescriptions for me."
+              />
+            </InputContainer>
+            <InputContainer
+              labelText="Any more information?"
+              collapseDescriptionSpace
+            >
+              <textarea
+                name="body"
+                onChange={e => setBody(e.target.value)}
+                value={body}
+                placeholder="My pharmacy is the Walgreens at 8th Ave and Mission St."
+              />
+            </InputContainer>
+            <Button type={ButtonType.PRIMARY}>Make request</Button>
+          </StyledForm>
+        </StyledBody>
+      </Card>
     </DefaultLayout>
   );
 };
