@@ -46,14 +46,14 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
   pageTitle
 }) => {
   const isLoggedIn = useAuthStatus() === AuthStatus.LOGGED_IN;
-  const location = useLocation();
 
   return (
     <div className="app">
       <Header>
         <Title>Coronavirus Help Requests</Title>
         <NavBar>
-          <Link to="/">Offer help</Link>
+          <Link to="/">Browse requests</Link>
+          <Link to="/offerHelp">Offer help</Link>
           <Link to="/requestHelp">Request help</Link>
           {isLoggedIn && <Link to="/messages">Messages</Link>}
         </NavBar>

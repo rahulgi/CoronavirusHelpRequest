@@ -15,6 +15,7 @@ import { Button, ButtonType } from "../common/Button";
 import { useHelpRequests } from "../../hooks/data/useHelpRequests";
 import { HelpRequestFilters } from "../../firebase/storage/helpRequest";
 import { PALETTE } from "../../styles/colors";
+import { HelpOfferCard } from "../HelpOfferCard";
 
 const FilterRow = styled.div`
   display: flex;

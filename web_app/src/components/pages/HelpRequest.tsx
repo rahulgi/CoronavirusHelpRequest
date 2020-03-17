@@ -9,7 +9,7 @@ import { Loading } from "../common/Loading";
 import { Error } from "../common/Error";
 import { NotFound } from "../common/NotFound";
 import { useCurrentUserId } from "../contexts/AuthContext";
-import { MessageThread } from "./MessageThread";
+import { MessageThread } from "../MessageThread";
 import { useThreads } from "../../hooks/data/useThreads";
 import { ThreadsList } from "../ThreadsList";
 import { Button, ButtonType } from "../common/Button";

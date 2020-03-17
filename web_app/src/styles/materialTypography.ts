@@ -293,7 +293,10 @@ export const materialTextStyles = css`
     text-transform: var(--mdc-typography-subtitle1-text-transform, inherit);
   }
 
-  p {
+  p,
+  label,
+  textarea,
+  input {
     ${materialParagraphStyle}
   }
 

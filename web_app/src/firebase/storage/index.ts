@@ -5,6 +5,7 @@ import { initFirebase } from "..";
 
 export enum Collections {
   HelpRequests = "help_requests",
+  HelpOffers = "help_offers",
   Threads = "threads",
   Messages = "messages",
   Users = "users"

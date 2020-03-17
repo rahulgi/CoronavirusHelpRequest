@@ -1,3 +1,5 @@
+import geohash from "ngeohash";
+
 export interface Location {
   lat: number;
   lng: number;
@@ -54,3 +56,34 @@ export function getDistanceFromLatLngInKm(
   var d = R * c; // Distance in km
   return d;
 }
+
+/**
+ * Calculate the upper and lower boundary geohashes for a given latitude,
+ * longitude, and distance in miles.
+ *
+ * @param latitude
+ * @param longitude
+ * @param distance in kilometers
+ */
+export const getGeohashRange = (
+  latitude: number,
+  longitude: number,
+  distance: number
+) => {
+  const lat = 0.009009009009; // approximate degrees latitude per kilometer
+  const lon = 0.01176470588; // approximate degrees longitude per kilometer at 40degrees
+
+  const lowerLat = latitude - lat * distance;
+  const lowerLon = longitude - lon * distance;
+
+  const upperLat = latitude + lat * distance;
+  const upperLon = longitude + lon * distance;
+
+  const lower = geohash.encode(lowerLat, lowerLon);
+  const upper = geohash.encode(upperLat, upperLon);
+
+  return {
+    lower,
+    upper
+  };
+};

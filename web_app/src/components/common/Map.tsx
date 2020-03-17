@@ -4,10 +4,12 @@ import styled from "@emotion/styled/macro";
 import { useLocation, LocationStatus } from "../../hooks/useLocation";
 import { Form } from "./Form";
 import { Location } from "../helpers/location";
+import { InputContainer } from "../common/InputContainer";
 import { spacing } from "../../styles/spacing";
 import { PALETTE } from "../../styles/colors";
 import { HelpRequestsResult } from "../../hooks/data/useHelpRequests";
 import { FetchResultStatus } from "../../hooks/data";
+import { ButtonType, Button } from "./Button";
 
 const MapContainer = styled.div`
   width: 100%;
@@ -39,21 +41,35 @@ const AsyncMap: React.FC<{
   startingLocation: Location;
   startingLocationName: string;
   locationColor: string;
+  clickable?: boolean;
+  locationRadius?: number; // km
   helpRequestsResult?: HelpRequestsResult;
-  onLocationChanged: (location: Location) => void;
+  onLocationChanged?: (location: Location) => void;
+  onLocationNameChanged?: (locationName: string) => void;
 }> = ({
   google,
   startingLocation,
   startingLocationName,
   locationColor,
+  clickable = true,
+  locationRadius = 1,
   helpRequestsResult,
-  onLocationChanged
+  onLocationChanged,
+  onLocationNameChanged
 }) => {
   const mapsRef = useRef<HTMLDivElement>();
   const searchBoxRef = useRef<HTMLInputElement>();
   const userLocation = useLocation();
   const [mapLocation, setMapLocation] = useState<Location>(startingLocation);
   const [inputLocation, setInputLocation] = useState(startingLocationName);
+
+  useEffect(() => {
+    setMapLocation(startingLocation);
+  }, [startingLocation]);
+
+  useEffect(() => {
+    setInputLocation(startingLocationName);
+  }, [startingLocationName]);
 
   useEffect(() => {
     if (google && google.maps && mapsRef.current) {
@@ -88,13 +104,16 @@ const AsyncMap: React.FC<{
         fillOpacity: 0.35,
         map: map,
         center: mapLocation,
-        radius: ONE_KILOMETER,
+        radius: locationRadius * ONE_KILOMETER,
         clickable: false
       });
 
-      const clickListener = map.addListener("click", function(e) {
-        setMapLocation({ lat: e.latLng.lat(), lng: e.latLng.lng() });
-      });
+      let clickListener: google.maps.MapsEventListener | undefined;
+      if (clickable) {
+        clickListener = map.addListener("click", function(e) {
+          setMapLocation({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+        });
+      }
 
       // Bias the SearchBox results towards current map's viewport.
       const boundsListener = map.addListener("bounds_changed", function() {
@@ -105,11 +124,15 @@ const AsyncMap: React.FC<{
       });
 
       return () => {
-        clickListener.remove();
+        clickListener && clickListener.remove();
         boundsListener.remove();
       };
     }
   }, [google, mapsRef]);
+
+  useEffect(() => {
+    mapCircle && mapCircle.setRadius(locationRadius * ONE_KILOMETER);
+  }, [locationRadius]);
 
   useEffect(() => {
     if (
@@ -187,18 +210,20 @@ const AsyncMap: React.FC<{
   }, [google, searchBoxRef]);
 
   useEffect(() => {
-    onLocationChanged(mapLocation);
+    onLocationChanged && onLocationChanged(mapLocation);
     mapMarker && mapMarker.setPosition(mapLocation);
     mapCircle && mapCircle.setCenter(mapLocation);
     map && map.panTo(mapLocation);
     if (geocoder) {
       geocoder.geocode({ location: mapLocation }, function(results, status) {
         if (status === "OK" && results[0]) {
-          setInputLocation(results[0].formatted_address);
+          const newLocationName = results[0].formatted_address;
+          setInputLocation(newLocationName);
+          onLocationNameChanged && onLocationNameChanged(newLocationName);
         } else {
-          setInputLocation(
-            `Coordinates (latitude: ${mapLocation.lat}, longitude: ${mapLocation.lng})`
-          );
+          const newLocationName = `Coordinates (latitude: ${mapLocation.lat}, longitude: ${mapLocation.lng})`;
+          setInputLocation(newLocationName);
+          onLocationNameChanged && onLocationNameChanged(newLocationName);
         }
       });
     }
@@ -208,34 +233,29 @@ const AsyncMap: React.FC<{
     <div>
       <Form onSubmit={e => e.preventDefault()}>
         <div>
-          <label htmlFor="location">Where are you?</label>
-          <LocationInputLine>
-            <SearchBoxComponent
-              type="text"
-              name="location"
-              value={inputLocation}
-              onChange={e => setInputLocation(e.target.value)}
-              placeholder="Enter location..."
-              ref={r => r && (searchBoxRef.current = r)}
-            />
-          </LocationInputLine>
+          <InputContainer labelText="Your location" collapseDescriptionSpace>
+            <LocationInputLine>
+              <SearchBoxComponent
+                type="text"
+                name="location"
+                value={inputLocation}
+                onChange={e => setInputLocation(e.target.value)}
+                placeholder="Enter location..."
+                ref={r => r && (searchBoxRef.current = r)}
+              />
+              <Button
+                type={ButtonType.SECONDARY}
+                onClick={() => {
+                  userLocation.status === LocationStatus.FOUND &&
+                    setMapLocation(userLocation.location);
+                }}
+                disabled={userLocation.status !== LocationStatus.FOUND}
+              >
+                <i className="material-icons">my_location</i>
+              </Button>
+            </LocationInputLine>
+          </InputContainer>
         </div>
-        {/* <div>or</div>
-        <div>
-          <LocationInputLine>
-            <button
-              type="button"
-              onClick={() => {
-                userLocation.status === LocationStatus.FOUND &&
-                  setMapLocation(userLocation.location);
-              }}
-              disabled={userLocation.status !== LocationStatus.FOUND}
-            >
-              <i className="material-icons">my_location</i>Use your location
-            </button>
-          </LocationInputLine>
-        </div>
-        <div>or</div> */}
         <div>
           {/* <label>Select location on map</label> */}
           <MapContainer

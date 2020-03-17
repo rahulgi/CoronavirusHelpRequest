@@ -17,67 +17,61 @@ import {
   getGeohashRange
 } from "../../components/helpers/location";
 
-export enum HelpRequestStatus {
-  ACTIVE = "ACTIVE",
-  CLAIMED = "CLAIMED",
-  RESOLVED = "RESOLVED"
-}
-
 /**
- * The shape of a HelpRequest in Firestore.
+ * The shape of a HelpOffer in Firestore.
  */
-interface HelpRequestDocument {
+interface HelpOfferDocument {
   created_at: firebase.firestore.Timestamp | null;
   updated_at: firebase.firestore.Timestamp | null;
 
   creator_id: string;
-  title: string;
-  body: string;
-  status: HelpRequestStatus;
+
   location: firebase.firestore.GeoPoint;
+  location_name: string;
   // See https://levelup.gitconnected.com/nearby-location-queries-with-cloud-firestore-e7f4a2f18f9d
   geohash: string;
+  radius: number; // km
 }
 
 /**
- * The shape of a HelpRequest that the client app uses.
+ * The shape of a HelpOffer that the client app uses.
  *
  * (Just a bit easier for us to use than raw Firestore docs.)
  */
-export interface HelpRequest {
+export interface HelpOffer {
   id: string;
   createdAt: Date;
   updatedAt: Date;
 
   creatorId: string;
-  title: string;
-  body: string;
-  status: HelpRequestStatus;
+
   location: Location;
+  locationName: string;
   geohash: string;
+  radius: number;
   // If a location filter is applied, then this will have the distance of the
-  // HelpRequest from that location.
+  // HelpOffer from that location.
   distance?: number;
 }
 
 /**
- * Maps Firestore HelpRequest query snapshot to the local HelpRequest type.
+ * Maps Firestore HelpOffer query snapshot to the local HelpOffer type.
  */
-function mapQueryDocToHelpRequest(
+function mapQueryDocToHelpOffer(
   doc: firebase.firestore.DocumentSnapshot,
   locationForDistance?: Location
-): HelpRequest {
+): HelpOffer {
   const id = doc.id;
   const {
     created_at,
     updated_at,
     creator_id,
-    title,
-    body,
-    status,
+
     location: firebaseLocation,
-    geohash
-  } = doc.data() as HelpRequestDocument;
+    location_name,
+    geohash,
+    radius
+  } = doc.data() as HelpOfferDocument;
   const location: Location = {
     lat: firebaseLocation.latitude,
     lng: firebaseLocation.longitude
@@ -87,25 +81,25 @@ function mapQueryDocToHelpRequest(
     createdAt: created_at ? created_at.toDate() : new Date(),
     updatedAt: updated_at ? updated_at.toDate() : new Date(),
     creatorId: creator_id,
-    title,
-    body,
-    status,
+
     location,
+    locationName: location_name,
     geohash,
+    radius,
     distance: locationForDistance
       ? getDistanceFromLatLngInKm(locationForDistance, location)
       : undefined
   };
 }
 
-export async function createHelpRequest({
-  title,
-  body,
-  location
+export async function createHelpOffer({
+  location,
+  locationName,
+  radius
 }: Omit<
-  HelpRequest,
-  "id" | "createdAt" | "updatedAt" | "status" | "creatorId" | "geohash"
->): Promise<CreateResult<HelpRequest>> {
+  HelpOffer,
+  "id" | "createdAt" | "updatedAt" | "creatorId" | "geohash"
+>): Promise<CreateResult<HelpOffer>> {
   const currentUser = getAuth().currentUser;
 
   if (!currentUser) {
@@ -116,23 +110,22 @@ export async function createHelpRequest({
     };
   }
 
-  const newDoc: Omit<HelpRequestDocument, "id"> = {
+  const newDoc: Omit<HelpOfferDocument, "id"> = {
     created_at: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp,
     updated_at: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp,
     creator_id: currentUser.uid,
-    title,
-    body,
-    status: HelpRequestStatus.ACTIVE,
     location: new firebase.firestore.GeoPoint(location.lat, location.lng),
-    geohash: geohash.encode(location.lat, location.lng)
+    location_name: locationName,
+    geohash: geohash.encode(location.lat, location.lng),
+    radius
   };
 
   return {
     status: CreateResultStatus.CREATED,
-    result: mapQueryDocToHelpRequest(
+    result: mapQueryDocToHelpOffer(
       await (
         await getFirestore()
-          .collection(Collections.HelpRequests)
+          .collection(Collections.HelpOffers)
           .add(newDoc)
       ).get()
     ),
@@ -140,13 +133,39 @@ export async function createHelpRequest({
   };
 }
 
-export async function updateHelpRequestStatus({
+export async function getHelpOfferForCurrentUser(): Promise<
+  HelpOffer | undefined
+> {
+  const currentUser = getAuth().currentUser;
+
+  if (!currentUser) {
+    throw new Error("User must be authenticated to get their own help offer.");
+  }
+
+  const helpOfferDoc = await getFirestore()
+    .collection(Collections.HelpOffers)
+    .where("creator_id", "==", currentUser.uid)
+    .get();
+
+  if (helpOfferDoc.empty) {
+    return undefined;
+  }
+
+  // Always return the first one if multiple match
+  return mapQueryDocToHelpOffer(helpOfferDoc.docs[0]);
+}
+
+export async function updateHelpOffer({
   id,
-  status
+  location,
+  locationName,
+  radius
 }: {
   id: string;
-  status: HelpRequestStatus;
-}): Promise<UpdateResult<HelpRequest>> {
+  location: Location;
+  locationName: string;
+  radius: number;
+}): Promise<UpdateResult<HelpOffer>> {
   if (!getAuth().currentUser) {
     return {
       status: UpdateResultStatus.AUTHENTICATI0N_REQUIRED,
@@ -156,15 +175,20 @@ export async function updateHelpRequestStatus({
   }
 
   await getFirestore()
-    .collection(Collections.HelpRequests)
+    .collection(Collections.HelpOffers)
     .doc(id)
-    .update({ status });
+    .update({
+      location: new firebase.firestore.GeoPoint(location.lat, location.lng),
+      location_name: locationName,
+      geohash: geohash.encode(location.lat, location.lng),
+      radius
+    });
 
   return {
     status: UpdateResultStatus.UPDATED,
-    result: mapQueryDocToHelpRequest(
+    result: mapQueryDocToHelpOffer(
       await getFirestore()
-        .collection(Collections.HelpRequests)
+        .collection(Collections.HelpOffers)
         .doc(id)
         .get()
     ),
@@ -172,38 +196,24 @@ export async function updateHelpRequestStatus({
   };
 }
 
-export async function getHelpRequest({
-  id
-}: {
-  id: string;
-}): Promise<HelpRequest | undefined> {
-  const helpRequestDoc = await getFirestore()
-    .collection(Collections.HelpRequests)
-    .doc(id)
-    .get();
-  return helpRequestDoc.exists
-    ? mapQueryDocToHelpRequest(helpRequestDoc)
-    : undefined;
-}
-
 interface LocationFilter {
   location: Location;
   distance: number; // in kilometers
 }
 
-export interface HelpRequestFilters {
+export interface HelpOfferFilters {
   locationFilter?: LocationFilter;
 }
 
-export async function getHelpRequests({
+export async function getHelpOffers({
   filters
 }: {
-  filters?: HelpRequestFilters;
-}): Promise<HelpRequest[]> {
+  filters?: HelpOfferFilters;
+}): Promise<HelpOffer[]> {
   let query:
     | firebase.firestore.CollectionReference
     | firebase.firestore.Query = getFirestore().collection(
-    Collections.HelpRequests
+    Collections.HelpOffers
   );
 
   if (filters) {
@@ -226,6 +236,6 @@ export async function getHelpRequests({
 
   const querySnapshot = await query.get();
   return querySnapshot.docs.map(doc =>
-    mapQueryDocToHelpRequest(doc, filters?.locationFilter?.location)
+    mapQueryDocToHelpOffer(doc, filters?.locationFilter?.location)
   );
 }
