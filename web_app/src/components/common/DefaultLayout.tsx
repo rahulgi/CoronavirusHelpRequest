@@ -41,6 +41,11 @@ interface DefaultLayoutProps {
   subtitle?: string;
 }
 
+const StyledLink = styled(Link)`
+  color: inherit;
+  text-decoration: inherit;
+`;
+
 export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
   children,
   pageTitle
@@ -50,13 +55,15 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
   return (
     <div className="app">
       <Header>
-        <Title>Coronavirus Help Requests</Title>
+        <StyledLink to="/">
+          <Title>Coronavirus Help Requests</Title>
+        </StyledLink>
         <NavBar>
           <Link to="/">Browse requests</Link>
           <Link to="/offerHelp">Offer help</Link>
           <Link to="/requestHelp">Request help</Link>
           {isLoggedIn && <Link to="/messages">Messages</Link>}
-          <Link to="/about">About</Link>
+          <Link to="/faq">FAQ</Link>
         </NavBar>
       </Header>
       <PageTitle>{pageTitle}</PageTitle>

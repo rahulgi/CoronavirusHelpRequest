@@ -28,9 +28,9 @@ const Section = styled.section`
 
 export const AboutPage: React.FC = () => {
   return (
-    <DefaultLayout pageTitle="About">
+    <DefaultLayout pageTitle="FAQ">
       <Section>
-        <h5>What is it?</h5>
+        <h5>What is this?</h5>
         <p>
           <b>Coronavirus Help Requests</b> was built to help people within
           communities help each other in the face of the Covid19 (Coronavirus)
@@ -43,6 +43,23 @@ export const AboutPage: React.FC = () => {
                 This site is not intended to solve urgent health-related
                 requests. If you're having an emergency, please contact 911 (or
                 your local equivalent).
+              </Warning>
+            </CardBodyText>
+          </CardBody>
+        </Card>
+        <Card>
+          <CardBody>
+            <CardBodyText>
+              <Warning>
+                If you suspect you have the Coronavirus, please contact your
+                doctor, and review the resources posted by the{" "}
+                <a
+                  href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019"
+                  target="_blank"
+                >
+                  World Health Organization
+                </a>
+                .
               </Warning>
             </CardBodyText>
           </CardBody>

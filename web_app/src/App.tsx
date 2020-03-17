@@ -45,7 +45,7 @@ class App extends React.Component {
               <MessageThreadsPage />
             </Route>
 
-            <Route path="/about" exact>
+            <Route path="/faq" exact>
               <AboutPage />
             </Route>
 

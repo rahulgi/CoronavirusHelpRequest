@@ -62,6 +62,9 @@ export const Auth: React.FC<{ redirectTo?: string }> = ({ redirectTo }) => {
         {
           provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
           authMethod: "https://accounts.google.com"
+        },
+        {
+          provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID
         }
       ]
     };
