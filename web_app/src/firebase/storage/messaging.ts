@@ -102,17 +102,23 @@ function mapQueryDocToMessage(
 }
 
 export async function getThreads({
-  forUserId
+  forUserId,
+  helpRequestId
 }: {
   forUserId: string;
+  helpRequestId?: string;
 }): Promise<Thread[]> {
-  return (
-    await getFirestore()
-      .collection(Collections.Threads)
-      .orderBy("last_message_at", "desc")
-      .where("participant_ids", "array-contains", forUserId)
-      .get()
-  ).docs.map(mapQueryDocToThread);
+  let query = await getFirestore()
+    .collection(Collections.Threads)
+    .where("participant_ids", "array-contains", forUserId);
+
+  if (helpRequestId) {
+    query = query.where("help_request_id", "==", helpRequestId);
+  }
+
+  return (await query.orderBy("last_message_at", "desc").get()).docs.map(
+    mapQueryDocToThread
+  );
 }
 
 export async function getThread({

@@ -21,6 +21,7 @@ const MessageInputForm = styled.form`
   & > *:not(:last-child) {
     margin-right: ${spacing.m};
   }
+  padding: ${spacing.m};
 `;
 
 const InputArea = styled.textarea`

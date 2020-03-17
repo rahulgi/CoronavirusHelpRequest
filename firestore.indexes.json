@@ -14,6 +14,23 @@
       ]
     },
     {
+      "collectionId": "threads",
+      "fields": [
+        {
+          "fieldPath": "participant_ids",
+          "mode": "ARRAY_CONTAINS"
+        },
+        {
+          "fieldPath": "help_request_id",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "last_message_at",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionId": "messages",
       "fields": [
         {

@@ -7,7 +7,7 @@ import { useAsyncEffect } from "../useAsyncEffect";
 
 export type ThreadsResult = FetchResult<Thread[]>;
 
-export function useThreads() {
+export function useThreads(helpRequestId?: string) {
   const currentUserId = useCurrentUserId();
   const [threadsResult, setThreadsResult] = useState<ThreadsResult>({
     status: FetchResultStatus.LOADING,
@@ -25,7 +25,10 @@ export function useThreads() {
     }
     return {
       status: FetchResultStatus.FOUND,
-      result: await getThreads({ forUserId: currentUserId }),
+      result: await getThreads({
+        forUserId: currentUserId,
+        helpRequestId: helpRequestId
+      }),
       error: undefined
     };
   }, [currentUserId]);

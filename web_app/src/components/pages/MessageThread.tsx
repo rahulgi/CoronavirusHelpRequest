@@ -15,37 +15,17 @@ import { useThread } from "../../hooks/data/useThread";
 import { useMessages } from "../../hooks/data/useMessages";
 import { useCurrentUserId } from "../contexts/AuthContext";
 
-export const MessageThreadPage: React.FC<RouteComponentProps<{
-  id: string;
-}>> = ({ match }) => {
-  const helpRequestId = match.params.id;
-
+export const MessageThread: React.FC<{
+  helpRequestId: string;
+}> = ({ helpRequestId }) => {
   const [didCreateThread, setDidCreateThread] = useState(false);
 
   const helpRequestResult = useHelpRequest(helpRequestId);
   const threadResult = useThread({ helpRequestId, didCreateThread });
   const messagesResult = useMessages(threadResult);
 
-  if (threadResult.status === FetchResultStatus.AUTHENTICATION_REQUIRED) {
-    return (
-      <Redirect to={`/login?redirectTo=/request/${helpRequestId}/messages`} />
-    );
-  }
-
   return (
-    <DefaultLayout pageTitle="Message thread with TODO">
-      <div>
-        {helpRequestResult.status === FetchResultStatus.NOT_FOUND && (
-          <NotFound elementName="Help Request" />
-        )}
-        {helpRequestResult.status === FetchResultStatus.FOUND && (
-          <HelpRequestCard request={helpRequestResult.result} />
-        )}
-        {helpRequestResult.status === FetchResultStatus.LOADING && <Loading />}
-        {helpRequestResult.status === FetchResultStatus.ERROR && (
-          <Error>{helpRequestResult.error}</Error>
-        )}
-      </div>
+    <div>
       <MessageInput
         helpRequestResult={helpRequestResult}
         threadResult={threadResult}
@@ -64,6 +44,6 @@ export const MessageThreadPage: React.FC<RouteComponentProps<{
       {messagesResult.status === FetchResultStatus.ERROR && (
         <Error>{messagesResult.error}</Error>
       )}
-    </DefaultLayout>
+    </div>
   );
 };

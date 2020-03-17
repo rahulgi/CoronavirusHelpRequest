@@ -9,7 +9,6 @@ import { LogoutPage } from "./components/pages/Logout";
 import { MakeRequestPage } from "./components/pages/MakeRequest";
 import { HelpRequestPage } from "./components/pages/HelpRequest";
 import { MessageThreadsPage } from "./components/pages/MessageThreads";
-import { MessageThreadPage } from "./components/pages/MessageThread";
 import { injectGlobalStyles } from "./styles";
 
 class App extends React.Component {
@@ -30,11 +29,6 @@ class App extends React.Component {
               <MakeRequestPage />
             </Route>
             <Route path="/request/:id" component={HelpRequestPage} exact />
-            <Route
-              path="/request/:id/messages"
-              component={MessageThreadPage}
-              exact
-            />
 
             <Route path="/messages" exact>
               <MessageThreadsPage />

@@ -8,6 +8,7 @@ import { useThreads } from "../../hooks/data/useThreads";
 import { FetchResultStatus } from "../../hooks/data";
 import { Loading } from "../common/Loading";
 import { Error } from "../common/Error";
+import { ThreadsList } from "../ThreadsList";
 
 export const MessageThreadsPage: React.FC = () => {
   const threadsResult = useThreads();
@@ -23,13 +24,7 @@ export const MessageThreadsPage: React.FC = () => {
         <Error>{threadsResult.error}</Error>
       )}
       {threadsResult.status === FetchResultStatus.FOUND && (
-        <List>
-          {threadsResult.result.map(thread => (
-            <li key={thread.id}>
-              <ThreadCard thread={thread} />
-            </li>
-          ))}
-        </List>
+        <ThreadsList threads={threadsResult.result} showStatuses />
       )}
     </DefaultLayout>
   );

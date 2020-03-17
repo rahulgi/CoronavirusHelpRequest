@@ -23,16 +23,20 @@ const StyledLink = styled(Link)`
 
 interface ThreadCardProps {
   thread: Thread;
+  showStatus?: boolean;
 }
 
-export const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
+export const ThreadCard: React.FC<ThreadCardProps> = ({
+  thread,
+  showStatus = false
+}) => {
   const { helpRequestId, lastMessageAt, participantIds } = thread;
   const currentUserId = useCurrentUserId();
   const recipientId = participantIds.filter(id => id !== currentUserId)[0];
   const helpRequestResult = useHelpRequest(helpRequestId);
 
   return (
-    <StyledLink to={`request/${helpRequestId}/messages`}>
+    <StyledLink to={`request/${helpRequestId}`}>
       <Card>
         <CardPrimaryAction>
           <CardOverline>
@@ -42,7 +46,7 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
             {helpRequestResult.result && helpRequestResult.result.title}
           </CardTitle>
           <CardSubtitle>
-            {helpRequestResult.result && (
+            {showStatus && helpRequestResult.result && (
               <HelpRequestStatusChip status={helpRequestResult.result.status} />
             )}
             <span>
