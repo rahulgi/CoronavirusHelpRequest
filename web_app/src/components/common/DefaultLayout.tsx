@@ -5,6 +5,10 @@ import { spacing } from "../../styles/spacing";
 import { Link } from "react-router-dom";
 import { useAuthStatus, AuthStatus } from "../contexts/AuthContext";
 
+const Header = styled.h3`
+  margin: ${spacing.l} 0;
+`;
+
 const NavBar = styled.div`
   display: flex;
   & *:not(:last-child) {
@@ -13,7 +17,8 @@ const NavBar = styled.div`
 `;
 
 const Footer = styled.div`
-  margin: ${spacing.l} 0 ${spacing.l} 0;
+  margin: auto 0 ${spacing.l} 0;
+  padding-top: ${spacing.l};
 `;
 
 interface DefaultLayoutProps {
@@ -29,7 +34,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
   return (
     <div className="app">
       <div>
-        <h3>Covid19 Help Requests</h3>
+        <Header>Coronavirus Help Requests</Header>
         <NavBar>
           <Link to="/">Browse requests</Link>
           <Link to="/requestHelp">Request help</Link>
