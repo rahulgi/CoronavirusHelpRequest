@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import styled from "@emotion/styled/macro";
 
 import {
   createMessage,
@@ -11,7 +12,20 @@ import { HelpRequestResult } from "../hooks/data/useHelpRequest";
 import { FetchResultStatus } from "../hooks/data";
 import { CreateResultStatus, CreateResult } from "../firebase/storage";
 import { Error } from "./common/Error";
-import { Form } from "./common/Form";
+import { Button, ButtonType } from "./common/Button";
+import { spacing } from "../styles/spacing";
+
+const MessageInputForm = styled.form`
+  display: flex;
+  align-items: center;
+  & > *:not(:last-child) {
+    margin-right: ${spacing.m};
+  }
+`;
+
+const InputArea = styled.textarea`
+  flex-grow: 1;
+`;
 
 interface MessageInputProps {
   helpRequestResult: HelpRequestResult;
@@ -27,6 +41,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
   const [messageText, setMessageText] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string>();
+  const formRef = useRef<HTMLFormElement>();
 
   async function sendMessage(e: React.FormEvent) {
     e.preventDefault();
@@ -74,14 +89,20 @@ export const MessageInput: React.FC<MessageInputProps> = ({
       helpRequestResult.status !== FetchResultStatus.FOUND);
 
   return (
-    <Form onSubmit={sendMessage}>
-      <textarea
+    <MessageInputForm
+      onSubmit={sendMessage}
+      ref={r => r && (formRef.current = r)}
+    >
+      <InputArea
         name="new-message"
         value={messageText}
         onChange={e => setMessageText(e.target.value)}
+        autoFocus
       />
-      <input type="submit" value="Send" disabled={disabled} autoFocus />
+      <Button type={ButtonType.PRIMARY} disabled={disabled}>
+        Send
+      </Button>
       {error && <Error>{error}</Error>}
-    </Form>
+    </MessageInputForm>
   );
 };
