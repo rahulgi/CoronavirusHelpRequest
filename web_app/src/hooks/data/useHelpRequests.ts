@@ -24,6 +24,11 @@ export function useHelpRequests(
   const fetchHelpRequests = useCallback(async (): Promise<
     HelpRequestsResult
   > => {
+    setHelpRequestsResult({
+      status: FetchResultStatus.LOADING,
+      result: undefined,
+      error: undefined
+    });
     return {
       status: FetchResultStatus.FOUND,
       result: await getHelpRequests({ filters }),

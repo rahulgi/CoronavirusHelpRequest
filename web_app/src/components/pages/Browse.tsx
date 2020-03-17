@@ -17,16 +17,27 @@ import { HelpRequestFilters } from "../../firebase/storage/helpRequest";
 import { PALETTE } from "../../styles/colors";
 import { HelpOfferCard } from "../HelpOfferCard";
 import { Card, CardBody } from "../common/Material/Card";
+import { FetchResultStatus } from "../../hooks/data";
+import { RadiusSelector } from "../common/RadiusSelector";
 
 const FilterRow = styled.div`
   display: flex;
+  align-items: center;
   & > *:not(:last-child) {
     margin-right: ${spacing.m};
   }
 `;
 
+const Filters = styled.div`
+  padding: ${spacing.s};
+  & > *:not(:last-child) {
+    margin-bottom: ${spacing.m};
+  }
+`;
+
 const QueryInfo = styled.p`
-  margin-top: 0;
+  /* Get rid of yucky paragraph margins. */
+  margin: 0;
 `;
 
 const DEFAULT_DISTANCE = 10; // km
@@ -37,6 +48,7 @@ export const BrowsePage: React.FC = () => {
   const [locationFilter, setLocationFilter] = useState<Location | undefined>(
     location
   );
+  const [radius, setRadius] = useState("10");
 
   const filter = useMemo(
     (): HelpRequestFilters => ({
@@ -44,12 +56,12 @@ export const BrowsePage: React.FC = () => {
         ? {
             locationFilter: {
               location,
-              distance: DEFAULT_DISTANCE
+              distance: parseInt(radius)
             }
           }
         : {})
     }),
-    [locationFilter]
+    [locationFilter, radius]
   );
 
   const helpRequestsResult = useHelpRequests(filter);
@@ -75,37 +87,48 @@ export const BrowsePage: React.FC = () => {
           />
         </CardBody>
       </Card>
-      <FilterRow>
-        <Button
-          type={ButtonType.PRIMARY}
-          onClick={e => {
-            e.preventDefault();
-            setLocationFilter(DEFAULT_LOCATION);
-          }}
-        >
-          Nearby requests
-        </Button>
-        <Button
-          type={ButtonType.SECONDARY}
-          onClick={e => {
-            e.preventDefault();
-            setLocationFilter(undefined);
-          }}
-        >
-          All requests
-        </Button>
-      </FilterRow>
-      <QueryInfo>
-        {filter.locationFilter ? (
-          <span>
-            Showing Help Requests within <b>10km</b> of <b>{locationName}</b>.
-          </span>
-        ) : (
-          <span>
-            Showing <b>all</b> Help Requests.
-          </span>
-        )}
-      </QueryInfo>
+      <Filters>
+        <FilterRow>
+          <RadiusSelector
+            labelText="Filter radius"
+            startingRadius="10"
+            onRadiusChanged={setRadius}
+          />
+          <Button
+            type={ButtonType.PRIMARY}
+            onClick={e => {
+              e.preventDefault();
+              setLocationFilter(DEFAULT_LOCATION);
+            }}
+            disabled={helpRequestsResult.status !== FetchResultStatus.FOUND}
+          >
+            Nearby requests
+          </Button>
+          <Button
+            type={ButtonType.SECONDARY}
+            onClick={e => {
+              e.preventDefault();
+              setLocationFilter(undefined);
+            }}
+            disabled={helpRequestsResult.status !== FetchResultStatus.FOUND}
+          >
+            All requests
+          </Button>
+        </FilterRow>
+        <QueryInfo>
+          {filter.locationFilter ? (
+            <span>
+              Showing Help Requests within{" "}
+              <b>{filter.locationFilter.distance}km</b> of <b>{locationName}</b>
+              .
+            </span>
+          ) : (
+            <span>
+              Showing <b>all</b> Help Requests.
+            </span>
+          )}
+        </QueryInfo>
+      </Filters>
       <HelpRequestsList helpRequestsResult={helpRequestsResult} />
     </DefaultLayout>
   );

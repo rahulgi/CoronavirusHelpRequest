@@ -30,6 +30,7 @@ import {
 import { CreateResult, UpdateResult } from "../firebase/storage";
 import { InputContainer } from "./common/InputContainer";
 import { spacing } from "../styles/spacing";
+import { RadiusSelector } from "./common/RadiusSelector";
 
 const OPTIONS: Option[] = [
   { label: "1km", value: "1" },
@@ -72,7 +73,8 @@ export const HelpOfferCard: React.FC = () => {
   const [newOfferResult, setNewOfferResult] = useState<
     CreateResult<HelpOffer> | UpdateResult<HelpOffer>
   >();
-  const [radius, setRadius] = useState("1");
+  const [startingRadius, setStartingRadius] = useState("1");
+  const [radius, setRadius] = useState(startingRadius);
   const [submitting, setSubmitting] = useState(false);
 
   const helpOffer = newOfferResult?.result || helpOfferResult.result;
@@ -83,6 +85,7 @@ export const HelpOfferCard: React.FC = () => {
       setSelectedLocation(helpOffer.location);
       setStartLocationName(helpOffer.locationName);
       setSelectedLocationName(helpOffer.locationName);
+      setStartingRadius(helpOffer.radius.toString());
       setRadius(helpOffer.radius.toString());
     }
   }, [helpOffer]);
@@ -135,12 +138,10 @@ export const HelpOfferCard: React.FC = () => {
                 startingLocationName={startLocationName}
                 locationColor={PALETTE.primary}
               />
-              <StyledSelect
+              <RadiusSelector
                 labelText="Offer radius"
-                value={radius}
-                options={OPTIONS}
-                onChange={option => setRadius(option.value)}
-                collapseDescriptionSpace
+                startingRadius={startingRadius}
+                onRadiusChanged={setRadius}
               />
               <p>
                 You are available to help within <b>{radius}km</b> of{" "}
