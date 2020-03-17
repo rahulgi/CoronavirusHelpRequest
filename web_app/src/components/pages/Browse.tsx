@@ -45,24 +45,13 @@ const DEFAULT_DISTANCE = 10; // km
 export const BrowsePage: React.FC = () => {
   const [location, setLocation] = useState<Location>(DEFAULT_LOCATION);
   const [locationName, setLocationName] = useState(DEFAULT_LOCATION_NAME);
-  const [locationFilter, setLocationFilter] = useState<Location | undefined>(
-    location
-  );
   const [radius, setRadius] = useState("10");
-
-  const filter = useMemo(
-    (): HelpRequestFilters => ({
-      ...(locationFilter
-        ? {
-            locationFilter: {
-              location,
-              distance: parseInt(radius)
-            }
-          }
-        : {})
-    }),
-    [locationFilter, radius]
-  );
+  const [filter, setFilter] = useState<HelpRequestFilters>({
+    locationFilter: {
+      location,
+      distance: parseInt(radius)
+    }
+  });
 
   const helpRequestsResult = useHelpRequests(filter);
 
@@ -77,7 +66,6 @@ export const BrowsePage: React.FC = () => {
           <Map
             onLocationChanged={(location: Location) => {
               setLocation(location);
-              setLocationFilter(location);
             }}
             onLocationNameChanged={setLocationName}
             startingLocation={DEFAULT_LOCATION}
@@ -98,7 +86,12 @@ export const BrowsePage: React.FC = () => {
             type={ButtonType.PRIMARY}
             onClick={e => {
               e.preventDefault();
-              setLocationFilter(DEFAULT_LOCATION);
+              setFilter({
+                locationFilter: {
+                  location,
+                  distance: parseInt(radius)
+                }
+              });
             }}
             disabled={helpRequestsResult.status !== FetchResultStatus.FOUND}
           >
@@ -108,7 +101,9 @@ export const BrowsePage: React.FC = () => {
             type={ButtonType.SECONDARY}
             onClick={e => {
               e.preventDefault();
-              setLocationFilter(undefined);
+              setFilter({
+                locationFilter: undefined
+              });
             }}
             disabled={helpRequestsResult.status !== FetchResultStatus.FOUND}
           >
