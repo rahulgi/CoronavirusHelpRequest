@@ -4,6 +4,7 @@ import { Option, Select } from "./Select";
 
 const OPTIONS: Option[] = [
   { label: "1km", value: "1" },
+  { label: "2km", value: "2" },
   { label: "5km", value: "5" },
   { label: "10km", value: "10" },
   { label: "20km", value: "20" },

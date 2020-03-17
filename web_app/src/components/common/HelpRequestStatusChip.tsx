@@ -12,6 +12,7 @@ const StatusToColorMapping: { [key in HelpRequestStatus]: string } = {
 };
 
 const Chip = styled.div<{ status: HelpRequestStatus }>`
+  display: inline-flex;
   border: 1px solid ${({ status }) => StatusToColorMapping[status]};
   border-radius: 8px;
   padding: ${spacing.xs};

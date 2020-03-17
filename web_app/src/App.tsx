@@ -11,6 +11,7 @@ import { HelpRequestPage } from "./components/pages/HelpRequest";
 import { MessageThreadsPage } from "./components/pages/MessageThreads";
 import { injectGlobalStyles } from "./styles";
 import { OfferHelpPage } from "./components/pages/OfferHelp";
+import { AboutPage } from "./components/pages/About";
 
 class App extends React.Component {
   public componentDidMount() {
@@ -42,6 +43,10 @@ class App extends React.Component {
 
             <Route path="/messages" exact>
               <MessageThreadsPage />
+            </Route>
+
+            <Route path="/about" exact>
+              <AboutPage />
             </Route>
 
             <Route path="/login" exact>

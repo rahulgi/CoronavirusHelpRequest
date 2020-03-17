@@ -43,6 +43,10 @@ const HelpRequest = styled.span`
   color: ${PALETTE.error};
 `;
 
+const HelpOffer = styled.span`
+  color: ${PALETTE.complimentary};
+`;
+
 const DEFAULT_DISTANCE = "10"; // km
 
 export const BrowsePage: React.FC = () => {
@@ -58,6 +62,9 @@ export const BrowsePage: React.FC = () => {
 
   const helpRequestsResult = useHelpRequests(filter);
   const helpOffersResult = useHelpOffers(filter);
+
+  const numHelpRequests = helpRequestsResult.result?.length || 0;
+  const numHelpOffers = helpOffersResult.result?.length || 0;
 
   return (
     <DefaultLayout pageTitle="Browse requests">
@@ -118,15 +125,20 @@ export const BrowsePage: React.FC = () => {
         <QueryInfo>
           {filter.locationFilter ? (
             <span>
-              Showing <b>{helpRequestsResult.result?.length}</b>{" "}
-              <HelpRequest>Help Requests</HelpRequest> within{" "}
-              <b>{filter.locationFilter.distance}km</b> of <b>{locationName}</b>
-              .
+              Showing <b>{numHelpRequests}</b>{" "}
+              <HelpRequest>
+                Help Request{numHelpRequests === 1 ? "" : "s"}
+              </HelpRequest>{" "}
+              and <b>{numHelpOffers}</b>{" "}
+              <HelpOffer>Help Offer{numHelpOffers === 1 ? "" : "s"}</HelpOffer>{" "}
+              within <b>{filter.locationFilter.distance}km</b> of{" "}
+              <b>{locationName}</b>.
             </span>
           ) : (
             <span>
               Showing <b>all</b> <HelpRequest>Help Requests</HelpRequest>{" "}
-              <b>({helpRequestsResult.result?.length} total)</b>.
+              <b>({numHelpRequests} total)</b> and{" "}
+              <HelpOffer>Help Offers</HelpOffer> <b>({numHelpOffers} total)</b>.
             </span>
           )}
         </QueryInfo>

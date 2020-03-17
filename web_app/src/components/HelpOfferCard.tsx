@@ -136,7 +136,7 @@ export const HelpOfferCard: React.FC = () => {
                 locationRadius={radius}
                 startingLocation={startLocation}
                 startingLocationName={startLocationName}
-                locationColor={PALETTE.primary}
+                locationColor={PALETTE.complimentary}
               />
               <RadiusSelector
                 labelText="Offer radius"
