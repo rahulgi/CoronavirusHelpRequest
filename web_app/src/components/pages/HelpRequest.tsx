@@ -32,7 +32,7 @@ export const HelpRequestPage: React.FC<RouteComponentProps<{
         <NotFound elementName="Help Request" />
       )}
       {requestResult.status === FetchResultStatus.FOUND && (
-        <HelpRequestCard request={requestResult.result} showActions />
+        <HelpRequestCard request={requestResult.result} showStatusButton />
       )}
       {requestResult.status === FetchResultStatus.LOADING && <Loading />}
       {requestResult.status === FetchResultStatus.ERROR && (

@@ -1,5 +1,35 @@
 import css from "@emotion/css/macro";
 
+export const materialParagraphStyle = css`
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-family: Roboto, sans-serif;
+  /* @alternate */
+  font-family: var(
+    --mdc-typography-body1-font-family,
+    var(--mdc-typography-font-family, Roboto, sans-serif)
+  );
+  font-size: 1rem;
+  /* @alternate */
+  font-size: var(--mdc-typography-body1-font-size, 1rem);
+  line-height: 1.5rem;
+  /* @alternate */
+  line-height: var(--mdc-typography-body1-line-height, 1.5rem);
+  font-weight: 400;
+  /* @alternate */
+  font-weight: var(--mdc-typography-body1-font-weight, 400);
+  letter-spacing: 0.03125em;
+  /* @alternate */
+  letter-spacing: var(--mdc-typography-body1-letter-spacing, 0.03125em);
+  text-decoration: inherit;
+  /* @alternate */
+  -webkit-text-decoration: var(--mdc-typography-body1-text-decoration, inherit);
+  text-decoration: var(--mdc-typography-body1-text-decoration, inherit);
+  text-transform: inherit;
+  /* @alternate */
+  text-transform: var(--mdc-typography-body1-text-transform, inherit);
+`;
+
 /**
  * Imports some Material Design styles from
  * https://unpkg.com/material-components-web@5.1.0/dist/material-components-web.css
@@ -264,36 +294,7 @@ export const materialTextStyles = css`
   }
 
   p {
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    font-family: Roboto, sans-serif;
-    /* @alternate */
-    font-family: var(
-      --mdc-typography-body1-font-family,
-      var(--mdc-typography-font-family, Roboto, sans-serif)
-    );
-    font-size: 1rem;
-    /* @alternate */
-    font-size: var(--mdc-typography-body1-font-size, 1rem);
-    line-height: 1.5rem;
-    /* @alternate */
-    line-height: var(--mdc-typography-body1-line-height, 1.5rem);
-    font-weight: 400;
-    /* @alternate */
-    font-weight: var(--mdc-typography-body1-font-weight, 400);
-    letter-spacing: 0.03125em;
-    /* @alternate */
-    letter-spacing: var(--mdc-typography-body1-letter-spacing, 0.03125em);
-    text-decoration: inherit;
-    /* @alternate */
-    -webkit-text-decoration: var(
-      --mdc-typography-body1-text-decoration,
-      inherit
-    );
-    text-decoration: var(--mdc-typography-body1-text-decoration, inherit);
-    text-transform: inherit;
-    /* @alternate */
-    text-transform: var(--mdc-typography-body1-text-transform, inherit);
+    ${materialParagraphStyle}
   }
 
   button {

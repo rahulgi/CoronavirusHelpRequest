@@ -36,13 +36,15 @@ const StyledLink = styled(Link)`
 interface HelpRequestCardProps {
   request: HelpRequest;
   isLink?: boolean;
-  showActions?: boolean;
+  showMessageButton?: boolean;
+  showStatusButton?: boolean;
 }
 
 export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
   request,
   isLink = false,
-  showActions = false
+  showStatusButton = false,
+  showMessageButton = false
 }) => {
   const history = useHistory();
 
@@ -78,6 +80,8 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
     };
   }
 
+  const showActions = showStatusButton || showMessageButton;
+
   const cardContents = (
     <Card>
       <CardPrimaryAction>
@@ -101,35 +105,44 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
       {showActions && (
         <CardActions>
           <CardActionButtons>
-            {isOwnRequest ? (
-              (status === HelpRequestStatus.ACTIVE && (
+            {showMessageButton &&
+              (isOwnRequest ? (
                 <Button
-                  type={ButtonType.TEXT_ONLY}
+                  type={ButtonType.SECONDARY}
+                  onClick={() => history.push(`/request/${id}`)}
+                >
+                  View Messages
+                </Button>
+              ) : (
+                <Button
+                  type={ButtonType.SECONDARY}
+                  onClick={onSendMessageClick}
+                >
+                  Message
+                </Button>
+              ))}
+            {showStatusButton &&
+              isOwnRequest &&
+              ((status === HelpRequestStatus.ACTIVE && (
+                <Button
+                  type={ButtonType.SECONDARY}
                   onClick={onSetStatusClickCreator(HelpRequestStatus.CLAIMED)}
                   disabled={updating}
                 >
                   Mark as In Progress
                 </Button>
               )) ||
-              (status === HelpRequestStatus.CLAIMED && (
-                <Button
-                  type={ButtonType.TEXT_ONLY}
-                  onClick={onSetStatusClickCreator(HelpRequestStatus.RESOLVED)}
-                  disabled={updating}
-                >
-                  Mark as Resolved
-                </Button>
-              ))
-            ) : (
-              <>
-                <Button
-                  type={ButtonType.TEXT_ONLY}
-                  onClick={onSendMessageClick}
-                >
-                  Send a message
-                </Button>
-              </>
-            )}
+                (status === HelpRequestStatus.CLAIMED && (
+                  <Button
+                    type={ButtonType.SECONDARY}
+                    onClick={onSetStatusClickCreator(
+                      HelpRequestStatus.RESOLVED
+                    )}
+                    disabled={updating}
+                  >
+                    Mark as Resolved
+                  </Button>
+                )))}
           </CardActionButtons>
         </CardActions>
       )}

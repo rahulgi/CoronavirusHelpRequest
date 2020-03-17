@@ -69,6 +69,16 @@ export const CardActions: React.FC = ({ children }) => {
   return <div className="mdc-card__actions">{children}</div>;
 };
 
+const StyledCardActionButtons = styled.div`
+  & > *:not(:last-child) {
+    margin-right: ${spacing.m};
+  }
+`;
+
 export const CardActionButtons: React.FC = ({ children }) => {
-  return <div className="mdc-card__action-buttons">{children}</div>;
+  return (
+    <StyledCardActionButtons className="mdc-card__action-buttons">
+      {children}
+    </StyledCardActionButtons>
+  );
 };

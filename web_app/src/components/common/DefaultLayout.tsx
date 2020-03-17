@@ -26,6 +26,10 @@ export const Contents = styled.div`
   }
 `;
 
+const PageTitle = styled.h4`
+  margin: ${spacing.l} 0;
+`;
+
 const Footer = styled.div`
   margin: auto 0 ${spacing.l} 0;
   padding-top: ${spacing.l};
@@ -51,10 +55,8 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
           {isLoggedIn && <Link to="/messages">Messages</Link>}
         </NavBar>
       </Header>
-      <Contents>
-        <h4>{pageTitle}</h4>
-        {children}
-      </Contents>
+      <PageTitle>{pageTitle}</PageTitle>
+      <Contents>{children}</Contents>
       <Footer>
         {isLoggedIn ? (
           <Link to="/logout">Logout</Link>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { DefaultLayout } from "../common/DefaultLayout";
 import { useHistory, Redirect } from "react-router-dom";
@@ -12,6 +12,8 @@ import {
   DEFAULT_LOCATION_NAME,
   DEFAULT_LOCATION
 } from "../helpers/location";
+import { PALETTE } from "../../styles/colors";
+import { Button, ButtonType } from "../common/Button";
 
 export const MakeRequestPage: React.FC = () => {
   const history = useHistory();
@@ -52,6 +54,7 @@ export const MakeRequestPage: React.FC = () => {
         startingLocation={location}
         startingLocationName={DEFAULT_LOCATION_NAME}
         onLocationChanged={setLocation}
+        locationColor={PALETTE.error}
       />
       <Form onSubmit={submitRequest}>
         <div>
@@ -76,7 +79,7 @@ export const MakeRequestPage: React.FC = () => {
         </div>
 
         <div>
-          <input type="submit" value="Create" />
+          <Button type={ButtonType.PRIMARY}>Make request</Button>
         </div>
       </Form>
     </DefaultLayout>

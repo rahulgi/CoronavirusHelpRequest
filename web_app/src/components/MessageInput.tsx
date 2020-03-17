@@ -97,7 +97,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
       <InputArea
         name="new-message"
         value={messageText}
-        onChange={e => setMessageText(e.target.value)}
+        onChange={e => setMessageText(e.currentTarget.value)}
         autoFocus
       />
       <Button type={ButtonType.PRIMARY} disabled={disabled}>

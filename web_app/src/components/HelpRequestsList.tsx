@@ -21,7 +21,12 @@ export const HelpRequestsList: React.FC<{
         {helpRequestsResult.status === FetchResultStatus.FOUND &&
           helpRequestsResult.result.map(request => (
             <li key={request.id}>
-              <HelpRequestCard request={request} isLink showActions />
+              <HelpRequestCard
+                request={request}
+                isLink
+                showStatusButton
+                showMessageButton
+              />
             </li>
           ))}
       </List>
