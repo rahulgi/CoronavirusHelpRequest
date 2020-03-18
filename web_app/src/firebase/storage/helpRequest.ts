@@ -49,6 +49,8 @@ export interface HelpRequest {
   createdAt: Date;
   updatedAt: Date;
 
+  collection: Collections.HelpRequests;
+
   creatorId: string;
   title: string;
   body: string;
@@ -87,6 +89,7 @@ function mapQueryDocToHelpRequest(
     createdAt: created_at ? created_at.toDate() : new Date(),
     updatedAt: updated_at ? updated_at.toDate() : new Date(),
     creatorId: creator_id,
+    collection: Collections.HelpRequests,
     title,
     body,
     status,
@@ -104,7 +107,13 @@ export async function createHelpRequest({
   location
 }: Omit<
   HelpRequest,
-  "id" | "createdAt" | "updatedAt" | "status" | "creatorId" | "geohash"
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "status"
+  | "creatorId"
+  | "geohash"
+  | "collection"
 >): Promise<CreateResult<HelpRequest>> {
   const currentUser = getAuth().currentUser;
 

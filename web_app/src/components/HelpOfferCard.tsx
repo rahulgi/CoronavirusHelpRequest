@@ -75,7 +75,14 @@ export const HelpOfferCard: React.FC = () => {
   >();
   const [startingRadius, setStartingRadius] = useState("1");
   const [radius, setRadius] = useState(startingRadius);
+
   const [submitting, setSubmitting] = useState(false);
+
+  const [title, setTitle] = useState("");
+  const [titleError, setTitleError] = useState<string | undefined>();
+
+  const [body, setBody] = useState("");
+  const [bodyError, setBodyError] = useState<string | undefined>();
 
   const helpOffer = newOfferResult?.result || helpOfferResult.result;
 
@@ -87,6 +94,8 @@ export const HelpOfferCard: React.FC = () => {
       setSelectedLocationName(helpOffer.locationName);
       setStartingRadius(helpOffer.radius.toString());
       setRadius(helpOffer.radius.toString());
+      setTitle(helpOffer.title);
+      setBody(helpOffer.body);
     }
   }, [helpOffer]);
 
@@ -99,12 +108,16 @@ export const HelpOfferCard: React.FC = () => {
             id: helpOffer.id,
             location: selectedLocation,
             locationName: selectedLocationName,
-            radius: parseInt(radius)
+            radius: parseInt(radius),
+            title,
+            body
           })
         : createHelpOffer({
             location: selectedLocation,
             locationName: selectedLocationName,
-            radius: parseInt(radius)
+            radius: parseInt(radius),
+            title,
+            body
           }))
     );
     setSubmitting(false);
@@ -130,6 +143,29 @@ export const HelpOfferCard: React.FC = () => {
               </CardSubtitle>
             </div>
             <StyledForm onSubmit={submitHelpOffer}>
+              <InputContainer
+                labelText="What are you offering?"
+                collapseDescriptionSpace
+              >
+                <input
+                  type="text"
+                  name="title"
+                  onChange={e => setTitle(e.target.value)}
+                  value={title}
+                  placeholder="I can help pick up groceries or prescriptions!"
+                />
+              </InputContainer>
+              <InputContainer
+                labelText="Any more information?"
+                collapseDescriptionSpace
+              >
+                <textarea
+                  name="body"
+                  onChange={e => setBody(e.target.value)}
+                  value={body}
+                  placeholder="I don't have a car but I'm near the Walgreens at 8th Ave and Mission st."
+                />
+              </InputContainer>
               <Map
                 onLocationChanged={setSelectedLocation}
                 onLocationNameChanged={setSelectedLocationName}

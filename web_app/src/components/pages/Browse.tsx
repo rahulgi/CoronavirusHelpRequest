@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled/macro";
+import css from "@emotion/css/macro";
 
 import { DefaultLayout } from "../common/DefaultLayout";
 import { HelpRequestsList } from "../HelpRequestsList";
@@ -18,6 +19,7 @@ import { Card, CardBody } from "../common/Material/Card";
 import { FetchResultStatus } from "../../hooks/data";
 import { RadiusSelector } from "../common/RadiusSelector";
 import { useHelpOffers } from "../../hooks/data/useHelpOffers";
+import { HelpOffersList } from "../HelpOffersList";
 
 const FilterRow = styled.div`
   display: flex;
@@ -47,7 +49,34 @@ const HelpOffer = styled.span`
   color: ${PALETTE.complimentary};
 `;
 
+const TabRow = styled.div`
+  display: flex;
+  & > *:not(:last-child) {
+    margin-right: ${spacing.m};
+  }
+`;
+
+const Tab = styled.div<{ selected: boolean; color: string }>`
+  padding: ${spacing.s};
+
+  ${({ selected, color }) =>
+    selected
+      ? css`
+          border-bottom: solid 1px ${color};
+          color: ${color};
+        `
+      : css`
+          cursor: pointer;
+          color: ${color}88;
+        `}
+`;
+
 const DEFAULT_DISTANCE = "10"; // km
+
+enum TabOption {
+  HELP_REQUESTS = "HELP_REQUESTS",
+  HELP_OFFERS = "HELP_OFFERS"
+}
 
 export const BrowsePage: React.FC = () => {
   const [location, setLocation] = useState<Location>(DEFAULT_LOCATION);
@@ -65,6 +94,10 @@ export const BrowsePage: React.FC = () => {
 
   const helpRequestsResult = useHelpRequests(filter);
   const helpOffersResult = useHelpOffers(filter);
+
+  const [selectedTab, setSelectedTab] = useState<TabOption>(
+    TabOption.HELP_REQUESTS
+  );
 
   const numHelpRequests = helpRequestsResult.result?.length || 0;
   const numHelpOffers = helpOffersResult.result?.length || 0;
@@ -148,7 +181,28 @@ export const BrowsePage: React.FC = () => {
           )}
         </QueryInfo>
       </Filters>
-      <HelpRequestsList helpRequestsResult={helpRequestsResult} />
+      <TabRow>
+        <Tab
+          color={PALETTE.error}
+          selected={selectedTab === TabOption.HELP_REQUESTS}
+          onClick={() => setSelectedTab(TabOption.HELP_REQUESTS)}
+        >
+          Help Requests
+        </Tab>
+        <Tab
+          color={PALETTE.complimentary}
+          selected={selectedTab === TabOption.HELP_OFFERS}
+          onClick={() => setSelectedTab(TabOption.HELP_OFFERS)}
+        >
+          Help Offers
+        </Tab>
+      </TabRow>
+      {selectedTab === TabOption.HELP_REQUESTS && (
+        <HelpRequestsList helpRequestsResult={helpRequestsResult} />
+      )}
+      {selectedTab === TabOption.HELP_OFFERS && (
+        <HelpOffersList helpOffersResult={helpOffersResult} />
+      )}
     </DefaultLayout>
   );
 };

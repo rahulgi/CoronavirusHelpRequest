@@ -31,6 +31,9 @@ interface HelpOfferDocument {
   // See https://levelup.gitconnected.com/nearby-location-queries-with-cloud-firestore-e7f4a2f18f9d
   geohash: string;
   radius: number; // km
+
+  title: string;
+  body: string;
 }
 
 /**
@@ -43,6 +46,8 @@ export interface HelpOffer {
   createdAt: Date;
   updatedAt: Date;
 
+  collection: Collections.HelpOffers;
+
   creatorId: string;
 
   location: Location;
@@ -52,6 +57,9 @@ export interface HelpOffer {
   // If a location filter is applied, then this will have the distance of the
   // HelpOffer from that location.
   distance?: number;
+
+  title: string;
+  body: string;
 }
 
 /**
@@ -70,7 +78,9 @@ function mapQueryDocToHelpOffer(
     location: firebaseLocation,
     location_name,
     geohash,
-    radius
+    radius,
+    title,
+    body
   } = doc.data() as HelpOfferDocument;
   const location: Location = {
     lat: firebaseLocation.latitude,
@@ -82,23 +92,29 @@ function mapQueryDocToHelpOffer(
     updatedAt: updated_at ? updated_at.toDate() : new Date(),
     creatorId: creator_id,
 
+    collection: Collections.HelpOffers,
+
     location,
     locationName: location_name,
     geohash,
     radius,
     distance: locationForDistance
       ? getDistanceFromLatLngInKm(locationForDistance, location)
-      : undefined
+      : undefined,
+    title,
+    body
   };
 }
 
 export async function createHelpOffer({
   location,
   locationName,
-  radius
+  radius,
+  title,
+  body
 }: Omit<
   HelpOffer,
-  "id" | "createdAt" | "updatedAt" | "creatorId" | "geohash"
+  "id" | "createdAt" | "updatedAt" | "creatorId" | "geohash" | "collection"
 >): Promise<CreateResult<HelpOffer>> {
   const currentUser = getAuth().currentUser;
 
@@ -117,7 +133,9 @@ export async function createHelpOffer({
     location: new firebase.firestore.GeoPoint(location.lat, location.lng),
     location_name: locationName,
     geohash: geohash.encode(location.lat, location.lng),
-    radius
+    radius,
+    title,
+    body
   };
 
   return {
@@ -159,13 +177,13 @@ export async function updateHelpOffer({
   id,
   location,
   locationName,
-  radius
-}: {
-  id: string;
-  location: Location;
-  locationName: string;
-  radius: number;
-}): Promise<UpdateResult<HelpOffer>> {
+  radius,
+  title,
+  body
+}: Omit<
+  HelpOffer,
+  "createdAt" | "updatedAt" | "creatorId" | "geohash" | "collection"
+>): Promise<UpdateResult<HelpOffer>> {
   if (!getAuth().currentUser) {
     return {
       status: UpdateResultStatus.AUTHENTICATI0N_REQUIRED,
@@ -178,10 +196,13 @@ export async function updateHelpOffer({
     .collection(Collections.HelpOffers)
     .doc(id)
     .update({
+      updated_at: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp,
       location: new firebase.firestore.GeoPoint(location.lat, location.lng),
       location_name: locationName,
       geohash: geohash.encode(location.lat, location.lng),
-      radius
+      radius,
+      title,
+      body
     });
 
   return {
