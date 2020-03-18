@@ -53,12 +53,12 @@ export const HelpRequestPage: React.FC<RouteComponentProps<{
             <HelpRequestMessageThread helpRequestId={id} />
           </div>
         ) : (
-          <div>
+          <>
             <h4>Messages</h4>
             {threadsResult.result && (
               <ThreadsList threads={threadsResult.result} />
             )}
-          </div>
+          </>
         )
       ) : (
         <div>

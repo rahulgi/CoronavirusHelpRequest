@@ -34,12 +34,6 @@ const FormContainer = styled.div`
   }
 `;
 
-const StyledForm = styled.form`
-  & > *:not(:last-child) {
-    margin-bottom: ${spacing.m};
-  }
-`;
-
 const StyledBody = styled(CardBody)`
   & > *:not(:last-child) {
     margin-bottom: ${spacing.l};
