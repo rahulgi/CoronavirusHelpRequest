@@ -59,7 +59,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
           <Title>Coronavirus Help Requests</Title>
         </StyledLink>
         <NavBar>
-          <Link to="/">Browse requests</Link>
+          <Link to="/">Browse</Link>
           <Link to="/offerHelp">Offer help</Link>
           <Link to="/requestHelp">Request help</Link>
           {isLoggedIn && <Link to="/messages">Messages</Link>}

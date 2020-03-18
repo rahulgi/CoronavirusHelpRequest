@@ -103,7 +103,7 @@ export const BrowsePage: React.FC = () => {
   const numHelpOffers = helpOffersResult.result?.length || 0;
 
   return (
-    <DefaultLayout pageTitle="Browse requests">
+    <DefaultLayout pageTitle="Browse">
       {/* <p>
         &ldquo;Ask not what your country can do for you — ask what you can do
         for your country.&rdquo; - John F. Kennedy

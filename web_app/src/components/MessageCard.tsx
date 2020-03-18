@@ -5,7 +5,6 @@ import { Message } from "../firebase/storage/messaging";
 import { UserChip } from "./common/UserChip";
 import {
   Card,
-  CardOverline,
   CardBodyText,
   CardSubtitle,
   CardBody
