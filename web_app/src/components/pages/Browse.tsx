@@ -52,6 +52,9 @@ const DEFAULT_DISTANCE = "10"; // km
 export const BrowsePage: React.FC = () => {
   const [location, setLocation] = useState<Location>(DEFAULT_LOCATION);
   const [locationName, setLocationName] = useState(DEFAULT_LOCATION_NAME);
+  const [locationNameFilter, setLocationNameFilter] = useState(
+    DEFAULT_LOCATION_NAME
+  );
   const [radius, setRadius] = useState(DEFAULT_DISTANCE);
   const [filter, setFilter] = useState<HelpRequestFilters>({
     locationFilter: {
@@ -81,6 +84,7 @@ export const BrowsePage: React.FC = () => {
             onLocationNameChanged={setLocationName}
             startingLocation={DEFAULT_LOCATION}
             startingLocationName={DEFAULT_LOCATION_NAME}
+            locationRadius={radius}
             locationColor={PALETTE.primary}
             helpRequestsResult={helpRequestsResult}
             helpOffersResult={helpOffersResult}
@@ -104,6 +108,7 @@ export const BrowsePage: React.FC = () => {
                   distance: parseInt(radius)
                 }
               });
+              setLocationNameFilter(locationName);
             }}
             disabled={helpRequestsResult.status !== FetchResultStatus.FOUND}
           >
@@ -132,7 +137,7 @@ export const BrowsePage: React.FC = () => {
               and <b>{numHelpOffers}</b>{" "}
               <HelpOffer>Help Offer{numHelpOffers === 1 ? "" : "s"}</HelpOffer>{" "}
               within <b>{filter.locationFilter.distance}km</b> of{" "}
-              <b>{locationName}</b>.
+              <b>{locationNameFilter}</b>.
             </span>
           ) : (
             <span>

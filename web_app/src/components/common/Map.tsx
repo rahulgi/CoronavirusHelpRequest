@@ -43,6 +43,7 @@ const AsyncMap: React.FC<{
   startingLocation: Location;
   startingLocationName: string;
   locationColor: string;
+  showCircle?: boolean;
   clickable?: boolean;
   locationRadius?: number; // km
   helpRequestsResult?: HelpRequestsResult;
@@ -54,6 +55,7 @@ const AsyncMap: React.FC<{
   startingLocation,
   startingLocationName,
   locationColor,
+  showCircle = false,
   clickable = true,
   locationRadius = 1,
   helpRequestsResult,
@@ -102,10 +104,10 @@ const AsyncMap: React.FC<{
 
       mapCircle = new google.maps.Circle({
         strokeColor: locationColor,
-        strokeOpacity: 0.8,
+        strokeOpacity: 0.6,
         strokeWeight: 2,
         fillColor: locationColor,
-        fillOpacity: 0.35,
+        fillOpacity: showCircle ? 0.2 : 0,
         map: map,
         center: mapLocation,
         radius: locationRadius * ONE_KILOMETER,

@@ -81,6 +81,7 @@ export const MakeRequestPage: React.FC = () => {
               startingLocationName={DEFAULT_LOCATION_NAME}
               onLocationChanged={setLocation}
               locationColor={PALETTE.error}
+              showCircle
             />
             <InputContainer
               labelText="What do you need help with?"
