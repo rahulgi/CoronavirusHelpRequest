@@ -23,7 +23,7 @@ import {
 import { InputContainer } from "../common/InputContainer";
 import { spacing } from "../../styles/spacing";
 
-const StyledForm = styled.form`
+const FormContainer = styled.div`
   & > *:not(:last-child) {
     margin-bottom: ${spacing.m};
   }
@@ -75,7 +75,7 @@ export const MakeRequestPage: React.FC = () => {
               message them further details.
             </CardSubtitle>
           </div>
-          <StyledForm onSubmit={submitRequest}>
+          <FormContainer>
             <Map
               startingLocation={location}
               startingLocationName={DEFAULT_LOCATION_NAME}
@@ -106,8 +106,10 @@ export const MakeRequestPage: React.FC = () => {
                 placeholder="My pharmacy is the Walgreens at 8th Ave and Mission St."
               />
             </InputContainer>
-            <Button type={ButtonType.PRIMARY}>Make request</Button>
-          </StyledForm>
+            <form onSubmit={submitRequest}>
+              <Button type={ButtonType.PRIMARY}>Make request</Button>
+            </form>
+          </FormContainer>
         </StyledBody>
       </Card>
     </DefaultLayout>

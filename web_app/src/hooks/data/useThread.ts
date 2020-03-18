@@ -15,7 +15,7 @@ export const INITAL_THREAD_RESULT: ThreadResult = {
 
 export function useThread({
   requestOrOffer: requestOrOfferId,
-  didCreateThread = true
+  didCreateThread = false
 }: {
   requestOrOffer: string;
   didCreateThread: boolean;
@@ -49,7 +49,7 @@ export function useThread({
           result: undefined,
           error: undefined
         };
-  }, [currentUserId, requestOrOfferId]);
+  }, [currentUserId, requestOrOfferId, didCreateThread]);
   const handleThreadResult = useCallback(setThreadResult, []);
   const handleThreadError = useCallback((e: Error) => {
     console.error(e);

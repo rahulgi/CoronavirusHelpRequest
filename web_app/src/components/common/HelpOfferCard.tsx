@@ -51,7 +51,7 @@ export const HelpOfferCard: React.FC<HelpOfferCardProps> = ({
 
   function onSendMessageClick(e: React.MouseEvent) {
     e.preventDefault();
-    const offerMessageUrl = `/offer/${id}/messages`;
+    const offerMessageUrl = `/offer/${id}`;
     isLoggedIn
       ? history.push(offerMessageUrl)
       : history.push(`/login?redirectTo=${offerMessageUrl}`);

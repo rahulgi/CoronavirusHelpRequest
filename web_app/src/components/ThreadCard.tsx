@@ -18,7 +18,6 @@ import { HelpRequestStatusChip } from "./common/HelpRequestStatusChip";
 import { useHelpOffer } from "../hooks/data/useHelpOffer";
 import { FetchResultStatus } from "../hooks/data";
 import { HelpOfferStatusChip } from "./common/HelpOfferStatusChip";
-import { HelpRequestStatus } from "../firebase/storage/helpRequest";
 
 const StyledLink = styled(Link)`
   color: inherit;
@@ -49,6 +48,9 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({
   const helpRequestNotFound =
     helpRequestResult.status === FetchResultStatus.NOT_FOUND;
 
+  console.log("Helpofferresult", helpOfferResult.status);
+  console.log("Helprequestresult", helpRequestResult.status);
+
   const content = (
     <Card>
       <CardPrimaryAction>
@@ -59,7 +61,6 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({
           {requestOrOffer.result && requestOrOffer.result.title}
         </CardTitle>
         <CardSubtitle>
-          }
           {showStatus && helpRequestNotFound ? (
             <HelpOfferStatusChip />
           ) : (
