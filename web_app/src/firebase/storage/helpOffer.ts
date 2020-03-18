@@ -8,7 +8,8 @@ import {
   CreateResult,
   CreateResultStatus,
   UpdateResult,
-  UpdateResultStatus
+  UpdateResultStatus,
+  QUERY_SIZE_LIMIT
 } from ".";
 import { getAuth } from "../auth";
 import {
@@ -262,7 +263,7 @@ export async function getHelpOffers({
     }
   }
 
-  query = query.orderBy("created_at", "desc");
+  query = query.orderBy("created_at", "desc").limit(QUERY_SIZE_LIMIT);
 
   const querySnapshot = await query.get();
   return querySnapshot.docs.map(doc =>

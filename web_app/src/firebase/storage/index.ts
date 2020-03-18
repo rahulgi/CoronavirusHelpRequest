@@ -11,6 +11,8 @@ export enum Collections {
   Users = "users"
 }
 
+export const QUERY_SIZE_LIMIT = 100;
+
 export enum CreateResultStatus {
   CREATED = "CREATED",
   AUTHENTICATI0N_REQUIRED = "AUTHENTICATION_REQUIRED",
