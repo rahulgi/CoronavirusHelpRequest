@@ -16,6 +16,7 @@ export type HelpOfferResult = FetchResult<HelpOffer>;
 
 export function useHelpOfferForCurrentUser(): HelpOfferResult {
   const authStatus = useAuthStatus();
+
   const [helpOfferResult, setHelpOfferResult] = useState<HelpOfferResult>({
     status: FetchResultStatus.LOADING,
     result: undefined,

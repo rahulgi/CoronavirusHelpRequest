@@ -200,8 +200,13 @@ interface LocationFilter {
   distance: number; // in kilometers
 }
 
+interface CreatorFilter {
+  creatorId: string;
+}
+
 export interface HelpRequestFilters {
   locationFilter?: LocationFilter;
+  creatorFilter?: CreatorFilter;
 }
 
 export async function getHelpRequests({
@@ -216,7 +221,7 @@ export async function getHelpRequests({
   );
 
   if (filters) {
-    const { locationFilter } = filters;
+    const { locationFilter, creatorFilter } = filters;
     if (locationFilter) {
       const { location, distance } = locationFilter;
       const { upper, lower } = getGeohashRange(
@@ -228,6 +233,9 @@ export async function getHelpRequests({
         .orderBy("geohash", "desc")
         .where("geohash", ">=", lower)
         .where("geohash", "<=", upper);
+    }
+    if (creatorFilter) {
+      query = query.where("creator_id", "==", creatorFilter.creatorId);
     }
   }
 

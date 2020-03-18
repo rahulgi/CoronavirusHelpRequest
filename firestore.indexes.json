@@ -57,6 +57,19 @@
       ]
     },
     {
+      "collectionId": "help_requests",
+      "fields": [
+        {
+          "fieldPath": "creator_id",
+          "mode": "DESCENDING"
+        },
+        {
+          "fieldPath": "created_at",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionId": "help_offers",
       "fields": [
         {

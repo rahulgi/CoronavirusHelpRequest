@@ -22,7 +22,8 @@ import {
 } from "../common/Material/Card";
 import { InputContainer } from "../common/InputContainer";
 import { spacing } from "../../styles/spacing";
-import { useHelpRequests } from "../../hooks/data/useHelpRequests";
+import { useHelpRequestsForCurrentUser } from "../../hooks/data/useHelpRequests";
+import { HelpRequestsList } from "../HelpRequestsList";
 
 const FormContainer = styled.div`
   & > *:not(:last-child) {
@@ -49,6 +50,8 @@ export const MakeRequestPage: React.FC = () => {
   const [location, setLocation] = useState<Location>(DEFAULT_LOCATION);
 
   const [submissionError, setSubmissionError] = useState<string | undefined>();
+
+  const helpRequestsResult = useHelpRequestsForCurrentUser();
 
   async function submitRequest(e: React.FormEvent) {
     e.preventDefault();
@@ -123,6 +126,12 @@ export const MakeRequestPage: React.FC = () => {
           </FormContainer>
         </StyledBody>
       </Card>
+      {helpRequestsResult.result && (
+        <>
+          <h4>Your requests</h4>
+          <HelpRequestsList helpRequestsResult={helpRequestsResult} />
+        </>
+      )}
     </DefaultLayout>
   );
 };

@@ -56,6 +56,7 @@ export const AboutPage: React.FC = () => {
                 <a
                   href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   World Health Organization
                 </a>
@@ -95,11 +96,15 @@ export const AboutPage: React.FC = () => {
         <h5>Who built this?</h5>
         <p>
           <b>Coronavirus Help Requests</b> was built by{" "}
-          <a href="https://rahulgi.com" target="_blank">
+          <a
+            href="https://rahulgi.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Rahul Gupta-Iwasaki
           </a>
           . He currently works at{" "}
-          <a href="https://every.org" target="_blank">
+          <a href="https://every.org" target="_blank" rel="noopener noreferrer">
             Every.org
           </a>{" "}
           and lives in San Francisco. If you have any
