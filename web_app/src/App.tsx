@@ -13,6 +13,7 @@ import { injectGlobalStyles } from "./styles";
 import { MakeOfferPage } from "./components/pages/MakeOffer";
 import { AboutPage } from "./components/pages/About";
 import { HelpOfferPage } from "./components/pages/HelpOffer";
+import { PrivacyPolicyPage } from "./components/pages/PrivacyPolicy";
 
 class App extends React.Component {
   public componentDidMount() {
@@ -61,6 +62,10 @@ class App extends React.Component {
             </Route>
             <Route path="/logout" exact>
               <LogoutPage />
+            </Route>
+
+            <Route path="/privacy" exact>
+              <PrivacyPolicyPage />
             </Route>
           </Switch>
         </Router>
