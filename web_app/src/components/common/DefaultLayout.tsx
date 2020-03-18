@@ -32,8 +32,13 @@ const PageTitle = styled.h4`
 `;
 
 const Footer = styled.div`
+  display: flex;
   margin: auto 0 ${spacing.l} 0;
   padding-top: ${spacing.l};
+
+  & *:not(:last-child) {
+    margin-right: ${spacing.m};
+  }
 `;
 
 interface DefaultLayoutProps {
@@ -69,6 +74,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
       <PageTitle>{pageTitle}</PageTitle>
       <Contents>{children}</Contents>
       <Footer>
+        <a href="mailto:rahul.guptaiwasaki+chr@gmail.com">Contact</a>
         {isLoggedIn ? (
           <Link to="/logout">Logout</Link>
         ) : (
