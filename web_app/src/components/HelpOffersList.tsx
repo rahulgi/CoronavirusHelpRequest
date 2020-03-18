@@ -18,6 +18,9 @@ export const HelpOffersList: React.FC<{
           <Error>{helpOffersResult.error}</Error>
         )}
         {helpOffersResult.status === FetchResultStatus.FOUND &&
+          helpOffersResult.result.length === 0 && <h6>No offers found</h6>}
+        {helpOffersResult.status === FetchResultStatus.FOUND &&
+          helpOffersResult.result.length > 0 &&
           helpOffersResult.result.map(offer => (
             <li key={offer.id}>
               <HelpOfferCard offer={offer} isLink showMessageButton />

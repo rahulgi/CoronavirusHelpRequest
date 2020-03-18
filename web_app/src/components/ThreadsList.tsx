@@ -8,7 +8,7 @@ export const ThreadsList: React.FC<{
   threads: Thread[];
   showStatuses?: boolean;
 }> = ({ threads, showStatuses = false }) => {
-  return (
+  return threads.length > 0 ? (
     <List>
       {threads.map(thread => (
         <li key={thread.id}>
@@ -16,5 +16,7 @@ export const ThreadsList: React.FC<{
         </li>
       ))}
     </List>
+  ) : (
+    <h6>No threads found</h6>
   );
 };

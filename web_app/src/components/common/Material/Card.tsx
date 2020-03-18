@@ -64,8 +64,15 @@ export const CardSubtitle: React.FC = ({ children }) => {
   );
 };
 
-export const CardBodyText: React.FC = ({ children }) => {
-  return <div className="mdc-typography mdc-typography--body2">{children}</div>;
+export const CardBodyText: React.FC<React.HTMLProps<HTMLDivElement>> = ({
+  children,
+  className
+}) => {
+  return (
+    <div className={`mdc-typography mdc-typography--body2 ${className}`}>
+      {children}
+    </div>
+  );
 };
 
 export const CardActions: React.FC = ({ children }) => {

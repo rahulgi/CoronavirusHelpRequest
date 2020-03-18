@@ -22,7 +22,7 @@ const Warning = styled.span`
 
 const Section = styled.section`
   & > *:not(:last-child) {
-    margin-bottom: ${spacing.s};
+    margin-bottom: ${spacing.m};
   }
 `;
 
@@ -65,13 +65,24 @@ export const AboutPage: React.FC = () => {
             </CardBodyText>
           </CardBody>
         </Card>
+        <p>
+          Covid19 appears to hit the elderly especially hard, and there are many
+          people in our communities who are otherwise already especially
+          vulnerable to respiratory illnesses.
+        </p>
+        <p>
+          Volunteers who help with tasks like delivering groceries or picking up
+          prescriptions can help reduce the risk and exposure to these
+          vulnerable populations. <b>Coronavirus Help Requests</b> aims to
+          connect people in need to those who can help.
+        </p>
       </Section>
       <Section>
         <h5>How does it work?</h5>
         <p>
           Vulnerable community members post{" "}
           <HelpRequest>Help Requests</HelpRequest> with their general location
-          and what they need.{" "}
+          and what they need.
         </p>
         <p>
           Healthy community members post <HelpOffer>Help Offers</HelpOffer> with
@@ -81,9 +92,13 @@ export const AboutPage: React.FC = () => {
           their offer.
         </p>
         <p>
-          Helpers can send messages to the creator of{" "}
-          <HelpRequest>Help Requests</HelpRequest> to figure out any details
-          they need to complete the request.
+          If you're looking to volunteer, you can send messages to the creator
+          of <HelpRequest>Help Requests</HelpRequest> to coordinate completing
+          their request.
+        </p>
+        <p>
+          If you need help, you can send a message reaching out to anyone who's
+          created a <HelpOffer>Help Offer</HelpOffer> near you.
         </p>
         <p>
           When a <HelpRequest>Help Request</HelpRequest> is completed, the
@@ -95,7 +110,7 @@ export const AboutPage: React.FC = () => {
       <Section>
         <h5>Who built this?</h5>
         <p>
-          <b>Coronavirus Help Requests</b> was built by{" "}
+          <b>Coronavirus Help Requests</b> was built as a community service by{" "}
           <a
             href="https://rahulgi.com"
             target="_blank"

@@ -28,6 +28,7 @@ import {
 } from "./Material/Card";
 import { Button, ButtonType } from "./Button";
 import { HelpRequestStatusChip } from "./HelpRequestStatusChip";
+import { spacing } from "../../styles/spacing";
 
 const StyledLink = styled(Link)`
   color: inherit;
@@ -40,6 +41,10 @@ interface HelpRequestCardProps {
   showMessageButton?: boolean;
   showStatusButton?: boolean;
 }
+
+const StyledCardBodyText = styled(CardBodyText)`
+  margin-top: ${spacing.m};
+`;
 
 export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
   request,
@@ -101,7 +106,7 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
         <TimeAgo date={createdAt} />
       </CardSubtitle>
 
-      <CardBodyText>{body}</CardBodyText>
+      <StyledCardBodyText>{body}</StyledCardBodyText>
     </>
   );
 

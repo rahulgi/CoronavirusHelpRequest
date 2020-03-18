@@ -23,10 +23,15 @@ import {
 } from "./Material/Card";
 import { Button, ButtonType } from "./Button";
 import { HelpOfferStatusChip } from "./HelpOfferStatusChip";
+import { spacing } from "../../styles/spacing";
 
 const StyledLink = styled(Link)`
   color: inherit;
   text-decoration: inherit;
+`;
+
+const StyledCardBodyText = styled(CardBodyText)`
+  margin-top: ${spacing.m};
 `;
 
 interface HelpOfferCardProps {
@@ -73,7 +78,7 @@ export const HelpOfferCard: React.FC<HelpOfferCardProps> = ({
         <TimeAgo date={createdAt} />
       </CardSubtitle>
 
-      <CardBodyText>{body}</CardBodyText>
+      <StyledCardBodyText>{body}</StyledCardBodyText>
     </>
   );
 

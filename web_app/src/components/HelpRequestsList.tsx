@@ -18,6 +18,9 @@ export const HelpRequestsList: React.FC<{
           <Error>{helpRequestsResult.error}</Error>
         )}
         {helpRequestsResult.status === FetchResultStatus.FOUND &&
+          helpRequestsResult.result.length === 0 && <h6>No requests found</h6>}
+        {helpRequestsResult.status === FetchResultStatus.FOUND &&
+          helpRequestsResult.result.length > 0 &&
           helpRequestsResult.result.map(request => (
             <li key={request.id}>
               <HelpRequestCard

@@ -31,15 +31,18 @@ export const GenericThread: React.FC<{
         threadResult={threadResult}
         triggerThreadRefresh={() => setDidCreateThread(true)}
       />
-      {messagesResult.status === FetchResultStatus.FOUND && (
-        <List>
-          {messagesResult.result.map(message => (
-            <li key={message.id}>
-              <MessageCard message={message} />
-            </li>
-          ))}
-        </List>
-      )}
+      {messagesResult.status === FetchResultStatus.FOUND &&
+        messagesResult.result.length === 0 && <h6>No messages yet!</h6>}
+      {messagesResult.status === FetchResultStatus.FOUND &&
+        messagesResult.result.length > 0 && (
+          <List>
+            {messagesResult.result.map(message => (
+              <li key={message.id}>
+                <MessageCard message={message} />
+              </li>
+            ))}
+          </List>
+        )}
       {messagesResult.status === FetchResultStatus.LOADING && <Loading />}
       {messagesResult.status === FetchResultStatus.ERROR && (
         <Error>{messagesResult.error}</Error>
