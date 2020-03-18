@@ -3,26 +3,31 @@ import React, { useState } from "react";
 import { List } from "./common/List";
 import { MessageCard } from "./MessageCard";
 import { MessageInput } from "./MessageInput";
-import { useHelpRequest } from "../hooks/data/useHelpRequest";
+import {
+  useHelpRequest,
+  HelpRequestResult
+} from "../hooks/data/useHelpRequest";
 import { FetchResultStatus } from "../hooks/data";
 import { Error } from "./common/Error";
 import { Loading } from "./common/Loading";
 import { useThread } from "../hooks/data/useThread";
 import { useMessages } from "../hooks/data/useMessages";
+import { HelpOfferResult, useHelpOffer } from "../hooks/data/useHelpOffer";
 
-export const MessageThread: React.FC<{
-  helpRequestId: string;
-}> = ({ helpRequestId }) => {
+export const GenericThread: React.FC<{
+  requestOrOfferId: string;
+  requestOrOfferResult: HelpRequestResult | HelpOfferResult;
+}> = ({ requestOrOfferId, requestOrOfferResult }) => {
   const [didCreateThread, setDidCreateThread] = useState(false);
-
-  const helpRequestResult = useHelpRequest(helpRequestId);
-  const threadResult = useThread({ helpRequestId, didCreateThread });
+  const threadResult = useThread({
+    requestOrOffer: requestOrOfferId,
+    didCreateThread
+  });
   const messagesResult = useMessages(threadResult);
-
   return (
     <div>
       <MessageInput
-        helpRequestResult={helpRequestResult}
+        requestOrOfferResult={requestOrOfferResult}
         threadResult={threadResult}
         triggerThreadRefresh={() => setDidCreateThread(true)}
       />
@@ -40,5 +45,30 @@ export const MessageThread: React.FC<{
         <Error>{messagesResult.error}</Error>
       )}
     </div>
+  );
+};
+
+export const HelpRequestMessageThread: React.FC<{
+  helpRequestId: string;
+}> = ({ helpRequestId }) => {
+  const helpRequestResult = useHelpRequest(helpRequestId);
+  return (
+    <GenericThread
+      requestOrOfferId={helpRequestId}
+      requestOrOfferResult={helpRequestResult}
+    />
+  );
+};
+
+export const HelpOfferMessageThread: React.FC<{
+  helpOfferId: string;
+}> = ({ helpOfferId }) => {
+  const helpOfferResult = useHelpOffer(helpOfferId);
+
+  return (
+    <GenericThread
+      requestOrOfferId={helpOfferId}
+      requestOrOfferResult={helpOfferResult}
+    />
   );
 };

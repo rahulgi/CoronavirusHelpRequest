@@ -10,8 +10,9 @@ import { MakeRequestPage } from "./components/pages/MakeRequest";
 import { HelpRequestPage } from "./components/pages/HelpRequest";
 import { MessageThreadsPage } from "./components/pages/MessageThreads";
 import { injectGlobalStyles } from "./styles";
-import { OfferHelpPage } from "./components/pages/OfferHelp";
+import { MakeOfferPage } from "./components/pages/MakeOffer";
 import { AboutPage } from "./components/pages/About";
+import { HelpOfferPage } from "./components/pages/HelpOffer";
 
 class App extends React.Component {
   public componentDidMount() {
@@ -28,8 +29,14 @@ class App extends React.Component {
             </Route>
 
             <Route path="/offerHelp" exact>
-              <OfferHelpPage />
+              <MakeOfferPage />
             </Route>
+            <Route path="/offer/:id" component={HelpOfferPage} exact />
+            <Route
+              path="/offer/:id/thread/:threadId"
+              component={HelpOfferPage}
+              exact
+            />
 
             <Route path="/requestHelp" exact>
               <MakeRequestPage />

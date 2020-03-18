@@ -14,10 +14,10 @@ export const INITAL_THREAD_RESULT: ThreadResult = {
 };
 
 export function useThread({
-  helpRequestId,
+  requestOrOffer: requestOrOfferId,
   didCreateThread = true
 }: {
-  helpRequestId: string;
+  requestOrOffer: string;
   didCreateThread: boolean;
 }): ThreadResult {
   const currentUserId = useCurrentUserId();
@@ -35,7 +35,7 @@ export function useThread({
     }
     const thread = await getThread({
       forUserId: currentUserId,
-      forHelpRequestId: helpRequestId
+      forRequestOrOfferId: requestOrOfferId
     });
     console.log("Got thread", thread);
     return thread
@@ -49,7 +49,7 @@ export function useThread({
           result: undefined,
           error: undefined
         };
-  }, [currentUserId, helpRequestId]);
+  }, [currentUserId, requestOrOfferId]);
   const handleThreadResult = useCallback(setThreadResult, []);
   const handleThreadError = useCallback((e: Error) => {
     console.error(e);

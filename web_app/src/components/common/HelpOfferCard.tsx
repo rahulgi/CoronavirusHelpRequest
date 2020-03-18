@@ -22,20 +22,11 @@ import {
   CardOverline
 } from "./Material/Card";
 import { Button, ButtonType } from "./Button";
-import { PALETTE } from "../../styles/colors";
-import { spacing } from "../../styles/spacing";
+import { HelpOfferStatusChip } from "./HelpOfferStatusChip";
 
 const StyledLink = styled(Link)`
   color: inherit;
   text-decoration: inherit;
-`;
-
-const Chip = styled.div`
-  display: inline-flex;
-  border: 1px solid ${PALETTE.complimentary};
-  border-radius: 8px;
-  padding: ${spacing.xs};
-  color: ${PALETTE.complimentary};
 `;
 
 interface HelpOfferCardProps {
@@ -73,7 +64,7 @@ export const HelpOfferCard: React.FC<HelpOfferCardProps> = ({
       </CardOverline>
       <CardTitle>{title}</CardTitle>
       <CardSubtitle>
-        <Chip>Offering help</Chip>
+        <HelpOfferStatusChip />
         {distance && (
           <span>
             <b>{distance.toPrecision(2)}km away</b>

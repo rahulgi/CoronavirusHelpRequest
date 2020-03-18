@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
-import styled from "@emotion/styled/macro";
 
-import { HelpOfferCard } from "./common/HelpOfferListCard";
+import { HelpOfferCard } from "./common/HelpOfferCard";
 import { List } from "./common/List";
 import { FetchResultStatus } from "../hooks/data";
 import { Loading } from "./common/Loading";

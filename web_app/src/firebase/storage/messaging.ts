@@ -10,7 +10,7 @@ interface ThreadDocument {
   created_at: firebase.firestore.Timestamp | null;
   updated_at: firebase.firestore.Timestamp | null;
 
-  help_request_id: string;
+  request_or_offer_id: string;
   creator_id: string;
   participant_ids: string[];
 
@@ -25,7 +25,7 @@ export interface Thread {
   createdAt: Date;
   updatedAt: Date;
 
-  helpRequestId: string;
+  requestOrOfferId: string;
   creatorId: string;
   participantIds: string[];
 
@@ -37,7 +37,7 @@ function mapQueryDocToThread(doc: firebase.firestore.DocumentSnapshot): Thread {
   const {
     created_at,
     updated_at,
-    help_request_id,
+    request_or_offer_id,
     creator_id,
     participant_ids,
     last_message_at
@@ -46,7 +46,7 @@ function mapQueryDocToThread(doc: firebase.firestore.DocumentSnapshot): Thread {
     id,
     createdAt: created_at ? created_at.toDate() : new Date(),
     updatedAt: updated_at ? updated_at.toDate() : new Date(),
-    helpRequestId: help_request_id,
+    requestOrOfferId: request_or_offer_id,
     creatorId: creator_id,
     participantIds: participant_ids,
     lastMessageAt: last_message_at ? last_message_at.toDate() : new Date()
@@ -103,17 +103,17 @@ function mapQueryDocToMessage(
 
 export async function getThreads({
   forUserId,
-  helpRequestId
+  requestOrOfferId
 }: {
   forUserId: string;
-  helpRequestId?: string;
+  requestOrOfferId?: string;
 }): Promise<Thread[]> {
   let query = await getFirestore()
     .collection(Collections.Threads)
     .where("participant_ids", "array-contains", forUserId);
 
-  if (helpRequestId) {
-    query = query.where("help_request_id", "==", helpRequestId);
+  if (requestOrOfferId) {
+    query = query.where("request_or_offer_id", "==", requestOrOfferId);
   }
 
   return (await query.orderBy("last_message_at", "desc").get()).docs.map(
@@ -123,14 +123,14 @@ export async function getThreads({
 
 export async function getThread({
   forUserId,
-  forHelpRequestId
+  forRequestOrOfferId
 }: {
   forUserId: string;
-  forHelpRequestId: string;
+  forRequestOrOfferId: string;
 }): Promise<Thread | undefined> {
   const results = await getFirestore()
     .collection(Collections.Threads)
-    .where("help_request_id", "==", forHelpRequestId)
+    .where("request_or_offer_id", "==", forRequestOrOfferId)
     .where("participant_ids", "array-contains", forUserId)
     .get();
 
@@ -215,7 +215,7 @@ export async function createMessage({
 }
 
 export async function createThread({
-  helpRequestId,
+  requestOrOfferId,
   participantIds
 }: Omit<
   Thread,
@@ -241,7 +241,7 @@ export async function createThread({
     created_at: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp,
     updated_at: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp,
     creator_id: currentUser.uid,
-    help_request_id: helpRequestId,
+    request_or_offer_id: requestOrOfferId,
     participant_ids: allParticipants,
     last_message_at: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp
   };

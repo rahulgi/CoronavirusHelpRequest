@@ -60,7 +60,7 @@ export const HelpRequestCard: React.FC<HelpRequestCardProps> = ({
 
   function onSendMessageClick(e: React.MouseEvent) {
     e.preventDefault();
-    const requestMessageUrl = `/request/${id}/messages`;
+    const requestMessageUrl = `/request/${id}`;
     isLoggedIn
       ? history.push(requestMessageUrl)
       : history.push(`/login?redirectTo=${requestMessageUrl}`);

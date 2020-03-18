@@ -1,27 +1,27 @@
 import React from "react";
 
-import { HelpRequestCard } from "../common/HelpRequestCard";
+import { HelpOfferCard } from "../common/HelpOfferCard";
 import { DefaultLayout } from "../common/DefaultLayout";
 import { RouteComponentProps } from "react-router-dom";
-import { useHelpRequest } from "../../hooks/data/useHelpRequest";
+import { useHelpOffer } from "../../hooks/data/useHelpOffer";
 import { FetchResultStatus } from "../../hooks/data";
 import { Loading } from "../common/Loading";
 import { Error } from "../common/Error";
 import { NotFound } from "../common/NotFound";
 import { useCurrentUserId } from "../contexts/AuthContext";
-import { HelpRequestMessageThread } from "../MessageThread";
+import { HelpOfferMessageThread } from "../MessageThread";
 import { useThreads } from "../../hooks/data/useThreads";
 import { ThreadsList } from "../ThreadsList";
 import { Button, ButtonType } from "../common/Button";
 
-export const HelpRequestPage: React.FC<RouteComponentProps<{
+export const HelpOfferPage: React.FC<RouteComponentProps<{
   id: string;
   threadId?: string;
 }>> = ({ match, history }) => {
   const { id, threadId } = match.params;
   const currentuserId = useCurrentUserId();
-  const requestResult = useHelpRequest(id);
-  const isOwnHelpRequest =
+  const requestResult = useHelpOffer(id);
+  const isOwnHelpOffer =
     requestResult.result && requestResult.result.creatorId === currentuserId;
 
   const threadsResult = useThreads(id);
@@ -32,13 +32,13 @@ export const HelpRequestPage: React.FC<RouteComponentProps<{
         <NotFound elementName="Help Request" />
       )}
       {requestResult.status === FetchResultStatus.FOUND && (
-        <HelpRequestCard request={requestResult.result} showStatusButton />
+        <HelpOfferCard offer={requestResult.result} />
       )}
       {requestResult.status === FetchResultStatus.LOADING && <Loading />}
       {requestResult.status === FetchResultStatus.ERROR && (
         <Error>{requestResult.error}</Error>
       )}
-      {isOwnHelpRequest ? (
+      {isOwnHelpOffer ? (
         threadId ? (
           <div>
             <Button
@@ -50,7 +50,7 @@ export const HelpRequestPage: React.FC<RouteComponentProps<{
             >
               Back to all messages
             </Button>
-            <HelpRequestMessageThread helpRequestId={id} />
+            <HelpOfferMessageThread helpOfferId={id} />
           </div>
         ) : (
           <div>
@@ -62,7 +62,7 @@ export const HelpRequestPage: React.FC<RouteComponentProps<{
         )
       ) : (
         <div>
-          <HelpRequestMessageThread helpRequestId={id} />
+          <HelpOfferMessageThread helpOfferId={id} />
         </div>
       )}
     </DefaultLayout>

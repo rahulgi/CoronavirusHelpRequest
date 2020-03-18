@@ -14,6 +14,7 @@ import { CreateResultStatus, CreateResult } from "../firebase/storage";
 import { Error } from "./common/Error";
 import { Button, ButtonType } from "./common/Button";
 import { spacing } from "../styles/spacing";
+import { HelpOfferResult } from "../hooks/data/useHelpOffer";
 
 const MessageInputForm = styled.form`
   display: flex;
@@ -29,14 +30,14 @@ const InputArea = styled.textarea`
 `;
 
 interface MessageInputProps {
-  helpRequestResult: HelpRequestResult;
+  requestOrOfferResult: HelpRequestResult | HelpOfferResult;
   threadResult: ThreadResult;
   triggerThreadRefresh?: () => void;
 }
 
 export const MessageInput: React.FC<MessageInputProps> = ({
   threadResult,
-  helpRequestResult,
+  requestOrOfferResult,
   triggerThreadRefresh
 }) => {
   const [messageText, setMessageText] = useState("");
@@ -50,16 +51,16 @@ export const MessageInput: React.FC<MessageInputProps> = ({
     let threadId = threadResult.result?.id;
     let createResult: CreateResult<Message> | undefined = undefined;
 
-    if (!threadId && helpRequestResult.status !== FetchResultStatus.FOUND) {
+    if (!threadId && requestOrOfferResult.status !== FetchResultStatus.FOUND) {
       return;
     }
     setSending(true);
 
-    if (!threadId) {
-      const helpRequest = helpRequestResult.result as HelpRequest;
+    if (!threadId && requestOrOfferResult.result) {
+      const requestOrOffer = requestOrOfferResult.result;
       const createThreadResult = await createThread({
-        helpRequestId: helpRequest.id,
-        participantIds: [helpRequest.creatorId]
+        requestOrOfferId: requestOrOffer.id,
+        participantIds: [requestOrOffer.creatorId]
       });
       if (createThreadResult.status === CreateResultStatus.CREATED) {
         threadId = createThreadResult.result.id;
@@ -87,7 +88,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
   const disabled =
     sending ||
     (threadResult.status !== FetchResultStatus.FOUND &&
-      helpRequestResult.status !== FetchResultStatus.FOUND);
+      requestOrOfferResult.status !== FetchResultStatus.FOUND);
 
   return (
     <MessageInputForm

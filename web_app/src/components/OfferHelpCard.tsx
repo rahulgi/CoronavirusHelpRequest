@@ -56,7 +56,7 @@ const StyledBody = styled(CardBody)`
   }
 `;
 
-export const HelpOfferCard: React.FC = () => {
+export const OfferHelpCard: React.FC = () => {
   const helpOfferResult = useHelpOfferForCurrentUser();
   const [startLocation, setStartLocation] = useState<Location>(
     DEFAULT_LOCATION

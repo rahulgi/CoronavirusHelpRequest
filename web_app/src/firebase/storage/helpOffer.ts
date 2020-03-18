@@ -173,6 +173,15 @@ export async function getHelpOfferForCurrentUser(): Promise<
   return mapQueryDocToHelpOffer(helpOfferDoc.docs[0]);
 }
 
+export async function getHelpOffer(id: string): Promise<HelpOffer | undefined> {
+  const helpOfferDoc = await getFirestore()
+    .collection(Collections.HelpOffers)
+    .doc(id)
+    .get();
+
+  return helpOfferDoc.exists ? mapQueryDocToHelpOffer(helpOfferDoc) : undefined;
+}
+
 export async function updateHelpOffer({
   id,
   location,

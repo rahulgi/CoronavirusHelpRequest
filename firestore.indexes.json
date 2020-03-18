@@ -21,7 +21,7 @@
           "mode": "ARRAY_CONTAINS"
         },
         {
-          "fieldPath": "help_request_id",
+          "fieldPath": "request_or_offer_id",
           "mode": "ASCENDING"
         },
         {
