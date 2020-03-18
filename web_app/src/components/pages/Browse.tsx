@@ -20,6 +20,7 @@ import { FetchResultStatus } from "../../hooks/data";
 import { RadiusSelector } from "../common/RadiusSelector";
 import { useHelpOffers } from "../../hooks/data/useHelpOffers";
 import { HelpOffersList } from "../HelpOffersList";
+import { Link } from "react-router-dom";
 
 const FilterRow = styled.div`
   display: flex;
@@ -104,6 +105,22 @@ export const BrowsePage: React.FC = () => {
 
   return (
     <DefaultLayout pageTitle="Browse">
+      <p>
+        Browse <HelpRequest>Help Requests</HelpRequest> and{" "}
+        <HelpOffer>Help Offers</HelpOffer> for things like prescriptions pickups
+        and groceries in your community.
+      </p>
+      <p>
+        If you need help,{" "}
+        <Link to="/requestHelp">
+          <b>create your own help request</b>
+        </Link>
+        . If you are healthy and willing,{" "}
+        <Link to="/offerHelp">
+          <b>offer to help others</b>
+        </Link>
+        .
+      </p>
       {/* <p>
         &ldquo;Ask not what your country can do for you — ask what you can do
         for your country.&rdquo; - John F. Kennedy
