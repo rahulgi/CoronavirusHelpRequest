@@ -22,6 +22,7 @@ import {
 } from "../common/Material/Card";
 import { InputContainer } from "../common/InputContainer";
 import { spacing } from "../../styles/spacing";
+import { useHelpRequests } from "../../hooks/data/useHelpRequests";
 
 const FormContainer = styled.div`
   & > *:not(:last-child) {
@@ -51,7 +52,12 @@ export const MakeRequestPage: React.FC = () => {
 
   async function submitRequest(e: React.FormEvent) {
     e.preventDefault();
-    // TODO validate, show errors
+    if (title.length < 5) {
+      setTitleError("Minimum length is 5 characters.");
+      return;
+    }
+
+    setTitleError(undefined);
     const createResult = await createHelpRequest({ title, body, location });
 
     if (createResult.status === CreateResultStatus.CREATED) {
@@ -76,15 +82,13 @@ export const MakeRequestPage: React.FC = () => {
             </CardSubtitle>
           </div>
           <FormContainer>
-            <Map
-              startingLocation={location}
-              startingLocationName={DEFAULT_LOCATION_NAME}
-              onLocationChanged={setLocation}
-              locationColor={PALETTE.error}
-              showCircle
-            />
             <InputContainer
               labelText="What do you need help with?"
+              validationStatus={
+                titleError
+                  ? { success: false, message: titleError }
+                  : { success: true }
+              }
               collapseDescriptionSpace
             >
               <input
@@ -106,6 +110,13 @@ export const MakeRequestPage: React.FC = () => {
                 placeholder="My pharmacy is the Walgreens at 8th Ave and Mission St."
               />
             </InputContainer>
+            <Map
+              startingLocation={location}
+              startingLocationName={DEFAULT_LOCATION_NAME}
+              onLocationChanged={setLocation}
+              locationColor={PALETTE.error}
+              showCircle
+            />
             <form onSubmit={submitRequest}>
               <Button type={ButtonType.PRIMARY}>Make request</Button>
             </form>

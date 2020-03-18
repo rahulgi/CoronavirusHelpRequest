@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled/macro";
 
-import {
-  useHelpOfferForCurrentUser,
-  HelpOfferResult
-} from "../hooks/data/useHelpOffer";
+import { useHelpOfferForCurrentUser } from "../hooks/data/useHelpOffer";
 import {
   Card,
   CardBody,
@@ -21,7 +18,6 @@ import {
 } from "./helpers/location";
 import { PALETTE } from "../styles/colors";
 import { Button, ButtonType } from "./common/Button";
-import { Select, Option } from "./common/Select";
 import {
   createHelpOffer,
   HelpOffer,
@@ -32,16 +28,10 @@ import { InputContainer } from "./common/InputContainer";
 import { spacing } from "../styles/spacing";
 import { RadiusSelector } from "./common/RadiusSelector";
 
-const OPTIONS: Option[] = [
-  { label: "1km", value: "1" },
-  { label: "5km", value: "5" },
-  { label: "10km", value: "10" },
-  { label: "20km", value: "20" },
-  { label: "50km", value: "50" }
-];
-
-const StyledSelect = styled(Select)`
-  max-width: 100px;
+const FormContainer = styled.div`
+  & > *:not(:last-child) {
+    margin-bottom: ${spacing.m};
+  }
 `;
 
 const StyledForm = styled.form`
@@ -101,6 +91,11 @@ export const OfferHelpCard: React.FC = () => {
 
   async function submitHelpOffer(e: React.FormEvent) {
     e.preventDefault();
+    if (title.length < 5) {
+      setTitleError("Minimum length is 5 characters.");
+      return;
+    }
+
     setSubmitting(true);
     setNewOfferResult(
       await (helpOffer
@@ -142,10 +137,14 @@ export const OfferHelpCard: React.FC = () => {
                 Request is created in the radius you select.
               </CardSubtitle>
             </div>
-            <StyledForm onSubmit={submitHelpOffer}>
+            <FormContainer>
               <InputContainer
                 labelText="What are you offering?"
-                collapseDescriptionSpace
+                validationStatus={
+                  titleError
+                    ? { success: false, message: titleError }
+                    : { success: true }
+                }
               >
                 <input
                   type="text"
@@ -184,16 +183,18 @@ export const OfferHelpCard: React.FC = () => {
                 You are available to help within <b>{radius}km</b> of{" "}
                 <b>{selectedLocationName}</b>.
               </p>
-              <Button type={ButtonType.PRIMARY}>
-                {submitting ? (
-                  <Loading />
-                ) : helpOffer ? (
-                  "Update help offer"
-                ) : (
-                  "Create help offer"
-                )}
-              </Button>
-            </StyledForm>
+              <form onSubmit={submitHelpOffer}>
+                <Button type={ButtonType.PRIMARY}>
+                  {submitting ? (
+                    <Loading />
+                  ) : helpOffer ? (
+                    "Update help offer"
+                  ) : (
+                    "Create help offer"
+                  )}
+                </Button>
+              </form>
+            </FormContainer>
           </>
         )}
       </StyledBody>
