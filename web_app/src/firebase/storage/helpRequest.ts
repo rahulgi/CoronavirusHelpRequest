@@ -233,7 +233,8 @@ export async function getHelpRequests({
       query = query
         .orderBy("geohash", "desc")
         .where("geohash", ">=", lower)
-        .where("geohash", "<=", upper);
+        .where("geohash", "<=", upper)
+        .where("status", "==", "ACTIVE");
     }
     if (creatorFilter) {
       query = query.where("creator_id", "==", creatorFilter.creatorId);

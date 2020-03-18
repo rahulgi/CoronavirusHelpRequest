@@ -53,6 +53,10 @@
         {
           "fieldPath": "created_at",
           "mode": "DESCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "mode": "DESCENDING"
         }
       ]
     },
