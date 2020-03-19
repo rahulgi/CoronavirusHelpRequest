@@ -123,7 +123,7 @@ export const AboutPage: React.FC = () => {
             Every.org
           </a>{" "}
           and lives in San Francisco. If you have any
-          questions/comments/concerns about this site, please email him at
+          questions/comments/concerns about this site, please email him at{" "}
           <a
             href="mailto:rahul@coronavirushelpprequest.org"
             target="_blank"
