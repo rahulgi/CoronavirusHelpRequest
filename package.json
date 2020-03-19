@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "main": "index.js",
   "repository": "git@github.com:rahulgi/CoronavirusHelpRequest.git",
-  "author": "rahul.guptaiwasaki@gmail.com",
-  "license": "None",
-  "private": true,
+  "author": "Github: rahulgi",
+  "license": "MIT",
+  "private": false,
   "scripts": {
     "deploy": "cd web_app && yarn build && cd ../ && yarn run firebase deploy"
   },

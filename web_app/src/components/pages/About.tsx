@@ -124,7 +124,14 @@ export const AboutPage: React.FC = () => {
           </a>{" "}
           and lives in San Francisco. If you have any
           questions/comments/concerns about this site, please email him at
-          rahul.guptaiwasaki(at)gmail.com.
+          <a
+            href="mailto:rahul@coronavirushelpprequest.org"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            rahul@coronavirushelpprequest.org
+          </a>
+          .
         </p>
       </Section>
     </DefaultLayout>

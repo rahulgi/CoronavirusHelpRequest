@@ -74,7 +74,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({
       <PageTitle>{pageTitle}</PageTitle>
       <Contents>{children}</Contents>
       <Footer>
-        <a href="mailto:rahul.guptaiwasaki+chr@gmail.com">Contact</a>
+        <a href="mailto:contact@coronavirushelprequest.org">Contact</a>
         <Link to="/privacy">Privacy Policy</Link>
         {isLoggedIn ? (
           <Link to="/logout">Logout</Link>
