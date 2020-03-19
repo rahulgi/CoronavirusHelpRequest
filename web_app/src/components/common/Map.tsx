@@ -11,6 +11,7 @@ import { HelpRequestsResult } from "../../hooks/data/useHelpRequests";
 import { FetchResultStatus } from "../../hooks/data";
 import { ButtonType, Button } from "./Button";
 import { HelpOffersResult } from "../../hooks/data/useHelpOffers";
+import { GOOGLE_MAPS_API_KEY } from "../../config";
 
 const MapContainer = styled.div`
   width: 100%;
@@ -297,8 +298,7 @@ const AsyncMap: React.FC<{
   );
 };
 
-const MAPS_API_URL =
-  "https://maps.googleapis.com/maps/api/js?key=AIzaSyCDQkDeYC3TXbJtG4lM6okHS-zN3xHps5E&libraries=visualization,places";
+const MAPS_API_URL = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=visualization,places`;
 
 export const Map = makeAsyncScriptLoader(MAPS_API_URL, {
   globalName: "google"
